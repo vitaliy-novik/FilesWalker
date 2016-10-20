@@ -1,0 +1,36 @@
+﻿@using WebSite.Helpers
+@model WebSite.ViewModels.Folders.FolderViewModel
+
+@{
+    ViewBag.Title = "Index";
+}
+
+<h2>Index</h2>
+
+<fieldset>
+    <legend>FolderViewModel</legend>
+
+    <div class="display-label">
+         @Html.DisplayNameFor(model => model.Path) :
+    </div>
+    <div class="display-field">
+        @Html.PathLink(Model.Path)
+    </div>
+    <div>
+        <ul>
+            @foreach (DirectoryInfo folder in Model.FoldersList)
+            {
+                <li>@Html.FolderLink(folder, Model.Path)</li>
+            }
+
+            @foreach (FileInfo file in Model.FilesList)
+            {
+                <li>@file.Name</li>
+            }
+        </ul>
+    </div>
+</fieldset>
+<p>
+    @Html.ActionLink("Edit", "Edit", new { /* id=Model.PrimaryKey */ }) |
+    @Html.ActionLink("Back to List", "Index")
+</p>

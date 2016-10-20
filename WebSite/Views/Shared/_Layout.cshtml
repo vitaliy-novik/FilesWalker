@@ -1,0 +1,20 @@
+﻿@using System.EnterpriseServices.CompensatingResourceManager
+<!DOCTYPE html>
+
+<html>
+<head>
+    <meta name="viewport" content="width=device-width"/>
+    <title>@ViewBag.Title</title>
+</head>
+<body>
+    <div>
+        @if (User.Identity.IsAuthenticated)
+        {
+            @Html.ActionLink("Log off", "LogOff", "Account")
+        }
+    </div>
+    <div>
+        @RenderBody()
+    </div>
+</body>
+</html>
