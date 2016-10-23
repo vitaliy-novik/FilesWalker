@@ -17,6 +17,11 @@
         @Html.PathLink(Model.Path)
     </div>
     <div>
+        @if (User.IsInRole("Administrator"))
+        {
+            @Html.ActionLink("Create folder", "Create", "Folders", new { path = Model.Path })
+            @Html.ActionLink("Create folder", "Create", "Files", new { path = Model.Path })
+        }
         <ul>
             @foreach (DirectoryInfo folder in Model.FoldersList)
             {

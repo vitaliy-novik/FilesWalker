@@ -1,10 +1,6 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
+﻿using System.Collections.Generic;
 using System.Text;
-using System.Web;
 using System.Web.Mvc;
-using System.Xml.Schema;
 
 namespace WebSite.Helpers
 {
@@ -26,6 +22,7 @@ namespace WebSite.Helpers
                 a.SetInnerText(folder);
                 href.Append("/");
                 href.Append(folder);
+                href.Append("/");
                 a.Attributes.Add(new KeyValuePair<string, string>("href", href.ToString()));
                 linkString.Append(a);
                 linkString.Append("/");

@@ -1,5 +1,4 @@
-﻿using EntityFrameworkContext;
-using EntityFrameworkContext.Entities;
+﻿using EntityFrameworkContext.Entities;
 using Infrastructure.Entities;
 using Repository.Interface.Repositories;
 
@@ -7,11 +6,6 @@ namespace EFRepositories.Repositories
 {
     public class UserRepository : Repository<User, IUser>, IUserRepository
     {
-        public UserRepository(FilesWalkerContext context)
-            : base(context)
-        {
-        }
-
         protected override User ConvertToDal(IUser user)
         {
             return new User()

@@ -29,5 +29,11 @@ namespace Business.Core.Services
 
             return roleRepository.GetRoles(user);
         }
+
+
+        public IEnumerable<IRole> GetAllRoles()
+        {
+            return roleRepository.GetAll();
+        }
     }
 }

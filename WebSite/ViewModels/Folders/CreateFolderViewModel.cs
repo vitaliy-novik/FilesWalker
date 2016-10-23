@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel.DataAnnotations;
-using System.Linq;
-using System.Web;
+﻿using System.ComponentModel.DataAnnotations;
 
 namespace WebSite.ViewModels.Folders
 {
@@ -10,5 +6,7 @@ namespace WebSite.ViewModels.Folders
     {
         [Required]
         public string Name { get; set; }
+
+        public string Path { get; set; }
     }
 }

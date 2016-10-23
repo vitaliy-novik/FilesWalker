@@ -1,6 +1,13 @@
-﻿using AutoMapper;
+﻿using System.Collections.Generic;
+using System.Linq;
+using System.Web.UI;
+using AutoMapper;
+using Business.Interface.Services;
+using Infrastructure.Entities;
 using WebSite.Models;
 using WebSite.ViewModels.Account;
+using WebSite.ViewModels.Roles;
+using WebSite.ViewModels.Users;
 
 namespace WebSite.Mapping
 {
@@ -10,6 +17,8 @@ namespace WebSite.Mapping
         {
             Mapper.Initialize(cfg => cfg.CreateMap<IdentityUser, RegistrationViewModel>());
             Mapper.Initialize(cfg => cfg.CreateMap<RegistrationViewModel, IdentityUser>());
+            Mapper.Initialize(cfg => cfg.CreateMap<UserViewModel, IUser>());
+            Mapper.Initialize(cfg => cfg.CreateMap<EditUserViewModel, IdentityUser>());
         }
 
         public static IdentityUser Map(RegistrationViewModel viewModelUser)
@@ -21,5 +30,40 @@ namespace WebSite.Mapping
         {
             return Mapper.Map<IdentityUser, RegistrationViewModel>(identityUser);
         }
+
+        public static UserViewModel Map(IUser user, IRoleService roleService)
+        {
+            Mapper.Initialize(cfg => cfg.CreateMap<IUser, UserViewModel>()
+                .ForMember("Roles", opt => opt.MapFrom(u => roleService.GetRoles(u))));
+            UserViewModel viewModel = Mapper.Map<IUser, UserViewModel>(user);
+            return viewModel;
+        }
+
+        public static EditUserViewModel MapToEditUserViewModel(IUser user, IRoleService roleService)
+        {
+            IEnumerable<IRole> allRoles = roleService.GetAllRoles();
+            Mapper.Initialize(cfg => cfg.CreateMap<IUser, EditUserViewModel>()
+                .ForMember("UserInRoles", opt => opt.MapFrom(u => allRoles.Select(role => new RoleEditorViewModel()
+                {
+                    Role = RoleMapper.Map(role),
+                    UserInRole = roleService.GetRoles(user).Any(r => r.Id == role.Id)
+                }))));
+
+            EditUserViewModel viewModel = Mapper.Map<IUser, EditUserViewModel>(user);
+            return viewModel;
+        }
+
+        public static IdentityUser Map(EditUserViewModel viewModel)
+        {
+            return new IdentityUser()
+            {
+                Id = viewModel.Id,
+                UserName = viewModel.UserName,
+                Password = viewModel.Password,
+                Email = viewModel.Email
+            };
+        }
+
+
     }
 }

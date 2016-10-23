@@ -1,0 +1,43 @@
+﻿@using Infrastructure.Entities
+@using WebSite.ViewModels.Users
+@model WebSite.ViewModels.Users.UsersListViewModel
+
+@{
+    ViewBag.Title = "Index";
+}
+
+<h2>Index</h2>
+
+<div>
+    <table>
+        <thead>
+        <tr>
+            <th>User name</th>
+            <th>Email</th>
+            <th>Roles</th>
+            <th>Actions</th>
+        </tr>
+        </thead>
+        <tbody>
+            @foreach (UserViewModel user in Model.Users)
+            {
+                <tr>
+                    <td>@Html.ActionLink(user.UserName, "Edit", new { id = user.Id })</td>
+                    <td>@user.Email</td>
+                    <td>
+                        @foreach (IRole role in user.Roles)
+                        {
+                            <span>@role.Name</span>
+                        }
+                    </td>
+                    <td>
+                        @Html.ActionLink("Delete", "Delete", new {id = user.Id})
+                        @Html.ActionLink("Edit", "Edit", new { id = user.Id })
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+        
+    </ul>
+</div>

@@ -8,6 +8,7 @@ using Microsoft.AspNet.Identity;
 using WebSite.Managers;
 using WebSite.Mapping;
 using WebSite.Models;
+using WebSite.ViewModels.Folders;
 
 namespace WebSite.Controllers
 {
@@ -54,10 +55,26 @@ namespace WebSite.Controllers
             return View("Index", FolderMapper.Map(folder));
         }
 
-        [Authorize]
+        [Authorize(Roles = "Administrator")]
         public ActionResult Create(string path)
         {
+            TempData["Path"] = path;
+
             return View();
+        }
+
+        [Authorize(Roles = "Administrator")]
+        [HttpPost]
+        public ActionResult Create(CreateFolderViewModel viewModel)
+        {
+            if (!ModelState.IsValid)
+            {
+                return PartialView("Create", viewModel);
+            }
+
+            Folder folder = FolderMapper.Map(viewModel);
+            foldersService.CreateFolder(folder.Path);
+            return RedirectToRoute("Folders", new { path = folder.Path });
         }
     }
 }

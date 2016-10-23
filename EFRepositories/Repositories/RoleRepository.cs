@@ -11,9 +11,19 @@ namespace EFRepositories.Repositories
 {
     public class RoleRepository : Repository<Role, IRole>, IRoleRepository
     {
-        public RoleRepository(FilesWalkerContext context)
-            : base(context)
+        public void SetUserRole(IUser user, IRole role)
         {
+            using (FilesWalkerContext context = new FilesWalkerContext())
+            {
+                var dalUser = context.Users.Include("Roles").FirstOrDefault(u => u.Id == user.Id);
+                if (dalUser == null)
+                {
+                    throw new ArgumentException("User does not exist");
+                }
+
+                dalUser.Roles.Add(context.Roles.Attach(ConvertToDal(role)));
+                context.SaveChanges();
+            }
         }
 
         public IEnumerable<IRole> GetRoles(IUser user)
@@ -23,14 +33,17 @@ namespace EFRepositories.Repositories
                 throw new ArgumentNullException();
             }
 
-            var account = context.Set<User>().Include("Roles").FirstOrDefault(u => u.Id == user.Id);
-            if (account == null)
+            using (FilesWalkerContext context = new FilesWalkerContext())
             {
-                throw new ArgumentException("user");
-            }
-            else
-            {
-                return account.Roles;
+                var account = context.Set<User>().Include("Roles").FirstOrDefault(u => u.Id == user.Id);
+                if (account == null)
+                {
+                    throw new ArgumentException("user");
+                }
+                else
+                {
+                    return account.Roles;
+                }
             }
         }
 

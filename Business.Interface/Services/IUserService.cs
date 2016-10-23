@@ -16,5 +16,9 @@ namespace Business.Interface.Services
         IUser GetById(string userId);
 
         IUser GetByUserName(string userName);
+
+        IEnumerable<IUser> GetAllUsers();
+
+        void Updat(IUser user);
     }
 }

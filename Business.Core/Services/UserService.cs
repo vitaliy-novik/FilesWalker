@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using Business.Interface.Services;
 using Infrastructure.Entities;
@@ -9,15 +10,22 @@ namespace Business.Core.Services
     public class UserService : IUserService
     {
         private readonly IUserRepository userRepository;
+        private readonly IRoleRepository roleRepository;
 
-        public UserService(IUserRepository userRepository)
+        public UserService(IUserRepository userRepository, IRoleRepository roleRepository)
         {
             if (userRepository == null)
             {
                 throw new ArgumentNullException("userRepository");
             }
 
+            if (roleRepository == null)
+            {
+                throw new ArgumentNullException("roleRepository");
+            }
+
             this.userRepository = userRepository;
+            this.roleRepository = roleRepository;
         }
         
         public void Create(IUser user)
@@ -28,6 +36,7 @@ namespace Business.Core.Services
             }
 
             this.userRepository.Create(user);
+            this.roleRepository.SetUserRole(user, roleRepository.GetAll(r => r.Name == "User").FirstOrDefault());
         }
 
 
@@ -61,6 +70,22 @@ namespace Business.Core.Services
             }
 
             return this.userRepository.GetAll(user => user.Email == userName).FirstOrDefault();
+        }
+
+        public IEnumerable<IUser> GetAllUsers()
+        {
+            return this.userRepository.GetAll();
+        }
+
+
+        public void Updat(IUser user)
+        {
+            if (user == null)
+            {
+                throw new ArgumentNullException("user");
+            }
+
+            userRepository.Update(user);
         }
     }
 }

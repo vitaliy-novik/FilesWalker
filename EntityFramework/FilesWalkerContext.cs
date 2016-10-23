@@ -5,7 +5,10 @@ namespace EntityFrameworkContext
 {
     public class FilesWalkerContext : DbContext
     {
-        public FilesWalkerContext() : base("FilesWalker") { }
+        public FilesWalkerContext() : base("FilesWalker")
+        {
+            Database.SetInitializer<FilesWalkerContext>(new DbContextInitializer());
+        }
 
         public DbSet<User> Users { get; set; }
 

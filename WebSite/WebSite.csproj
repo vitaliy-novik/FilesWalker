@@ -166,7 +166,9 @@
     <Compile Include="App_Start\UnityMvcActivator.cs" />
     <Compile Include="Bootstrapper.cs" />
     <Compile Include="Controllers\AccountController.cs" />
+    <Compile Include="Controllers\DataController.cs" />
     <Compile Include="Controllers\FoldersController.cs" />
+    <Compile Include="Controllers\UsersController.cs" />
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
@@ -176,6 +178,7 @@
     <Compile Include="Managers\IUserManager.cs" />
     <Compile Include="Managers\UserStore.cs" />
     <Compile Include="Mapping\FolderMapper.cs" />
+    <Compile Include="Mapping\RoleMapper.cs" />
     <Compile Include="Mapping\UserMapper.cs" />
     <Compile Include="Models\IdentityUser.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
@@ -184,6 +187,12 @@
     <Compile Include="ViewModels\Folders\FolderViewModel.cs" />
     <Compile Include="ViewModels\Account\LoginViewModel.cs" />
     <Compile Include="ViewModels\Account\RegistrationViewModel.cs" />
+    <Compile Include="ViewModels\Roles\RoleEditorViewModel.cs" />
+    <Compile Include="ViewModels\Roles\RolesEditorViewModel.cs" />
+    <Compile Include="ViewModels\Roles\RoleViewModel.cs" />
+    <Compile Include="ViewModels\Users\EditUserViewModel.cs" />
+    <Compile Include="ViewModels\Users\UsersListViewModel.cs" />
+    <Compile Include="ViewModels\Users\UserViewModel.cs" />
   </ItemGroup>
   <ItemGroup>
     <Compile Include="App_Start\FilterConfig.cs" />
@@ -239,6 +248,15 @@
   <ItemGroup>
     <Content Include="Views\Folders\Create.cshtml" />
   </ItemGroup>
+  <ItemGroup>
+    <Content Include="Views\Users\Index.cshtml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Views\Users\Edit.cshtml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Views\Data\RolesEditor.cshtml" />
+  </ItemGroup>
   <PropertyGroup>
     <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">10.0</VisualStudioVersion>
     <VSToolsPath Condition="'$(VSToolsPath)' == ''">$(MSBuildExtensionsPath32)\Microsoft\VisualStudio\v$(VisualStudioVersion)</VSToolsPath>
@@ -257,7 +275,7 @@
           <AutoAssignPort>True</AutoAssignPort>
           <DevelopmentServerPort>62727</DevelopmentServerPort>
           <DevelopmentServerVPath>/</DevelopmentServerVPath>
-          <IISUrl>http://localhost:62573/</IISUrl>
+          <IISUrl>http://localhost:62727/</IISUrl>
           <NTLMAuthentication>False</NTLMAuthentication>
           <UseCustomServer>False</UseCustomServer>
           <CustomServerUrl>

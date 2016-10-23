@@ -6,6 +6,11 @@ namespace EntityFrameworkContext.Entities
 {
     public class Role : IRole
     {
+        public Role()
+        {
+            Id = Guid.NewGuid().ToString();
+        }
+
         public string Id { get; set; }
 
         public string Name { get; set; }

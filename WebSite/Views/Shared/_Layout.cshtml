@@ -12,6 +12,11 @@
         {
             @Html.ActionLink("Log off", "LogOff", "Account")
         }
+
+        @if (User.IsInRole("Administrator"))
+        {
+            @Html.ActionLink("Admin", "Index", "Users")
+        }
     </div>
     <div>
         @RenderBody()

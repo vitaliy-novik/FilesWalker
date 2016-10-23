@@ -8,6 +8,8 @@ namespace Repository.Interface.Repositories
     {
         T GetById(string id);
 
+        IEnumerable<T> GetAll();
+        
         IEnumerable<T> GetAll(Func<T, bool> func);
 
         void Delete(T entity);

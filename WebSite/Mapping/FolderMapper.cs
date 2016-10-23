@@ -1,11 +1,5 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Web;
-using AutoMapper;
+﻿using AutoMapper;
 using Infrastructure.Entities;
-using WebSite.Models;
-using WebSite.ViewModels.Account;
 using WebSite.ViewModels.Folders;
 
 namespace WebSite.Mapping
@@ -18,9 +12,13 @@ namespace WebSite.Mapping
             Mapper.Initialize(cfg => cfg.CreateMap<FolderViewModel, Folder>());
         }
 
-        public static Folder Map(FolderViewModel viewModelFolder)
+        public static Folder Map(CreateFolderViewModel viewModelFolder)
         {
-            return Mapper.Map<FolderViewModel, Folder>(viewModelFolder);
+            return new Folder()
+            {
+                Path = viewModelFolder.Path + viewModelFolder.Name
+            };
+            //Mapper.Map<CreateFolderViewModel, Folder>(viewModelFolder);
         }
 
         public static FolderViewModel Map(Folder folder)

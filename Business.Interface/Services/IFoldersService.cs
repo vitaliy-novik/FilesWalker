@@ -8,5 +8,7 @@ namespace Business.Interface.Services
         Folder GetDirectories(IUser user);
 
         Folder GetDirectories(IUser user, string path);
+
+        void CreateFolder(string path);
     }
 }

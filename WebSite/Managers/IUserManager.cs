@@ -1,4 +1,5 @@
-﻿using System.Security.Claims;
+﻿using System.Collections.Generic;
+using System.Security.Claims;
 using System.Threading.Tasks;
 using Microsoft.AspNet.Identity;
 using WebSite.Models;
@@ -14,5 +15,7 @@ namespace WebSite.Managers
         Task<IdentityResult> CreateAsync(TUser user, string password);
 
         Task<IdentityUser> FindByIdAsync(string id);
+
+        Task<IList<string>> GetRolesAsync(string userId);
     }
 }

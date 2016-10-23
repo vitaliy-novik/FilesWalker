@@ -1,4 +1,7 @@
-﻿using System.Data.Entity;
+﻿using System;
+using System.Collections.Generic;
+using System.Data.Entity;
+using System.Linq;
 using EntityFrameworkContext.Entities;
 
 namespace EntityFrameworkContext
@@ -7,10 +10,24 @@ namespace EntityFrameworkContext
     {
         protected override void Seed(FilesWalkerContext context)
         {
-            context.Roles.Add(new Role { Name = "Administrator" });
-            context.Roles.Add(new Role { Name = "Moderator" });
-            context.Roles.Add(new Role { Name = "User" });
-            context.Roles.Add(new Role { Name = "Guest" });
+            List<Role> roles = new List<Role>()
+            {
+                new Role() { Name = "Administrator" },
+                new Role() { Name = "User" }
+            };
+
+            context.Roles.AddRange(roles);
+            context.SaveChanges();
+
+            context.Users.Add(new User()
+            {
+                UserName = "admin",
+                Email = "admin",
+                Password = "ALAbr9jo7NtKkTIwumGoh2wJMz889pAifwlFLpCkiUnBuu0T0kfHPzbA+/faquX+HA==",
+                Roles = roles
+            });
+
+            context.SaveChanges();
 
             base.Seed(context);
         }
