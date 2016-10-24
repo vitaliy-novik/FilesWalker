@@ -10,18 +10,24 @@
 <fieldset>
     <legend>FolderViewModel</legend>
 
-    <div class="display-label">
-         @Html.DisplayNameFor(model => model.Path) :
-    </div>
-    <div class="display-field">
-        @Html.PathLink(Model.Path)
-    </div>
     <div>
         @if (User.IsInRole("Administrator"))
         {
-            @Html.ActionLink("Create folder", "Create", "Folders", new { path = Model.Path })
-            @Html.ActionLink("Create folder", "Create", "Files", new { path = Model.Path })
+            <div class="dropdown">
+                <button class="btn btn-default dropdown-toggle" type="button" id="dropdownMenu1" data-toggle="dropdown" aria-haspopup="true" aria-expanded="true">
+                    <span class="glyphicon glyphicon-plus"></span>
+                    New
+                    <span class="caret"></span>
+                </button>
+                <ul class="dropdown-menu" aria-labelledby="dropdownMenu1">
+                    <li>@Html.ActionLink("Create folder", "Create", "Folders", new { path = Model.Path })</li>
+                    <li>@Html.ActionLink("Create file", "Create", "Files", new { path = Model.Path })</li>
+                </ul>
+            </div>
         }
+        <div class="display-field">
+            @Html.PathLink(Model.Path)
+        </div>
         <ul>
             @foreach (DirectoryInfo folder in Model.FoldersList)
             {
@@ -36,6 +42,5 @@
     </div>
 </fieldset>
 <p>
-    @Html.ActionLink("Edit", "Edit", new { /* id=Model.PrimaryKey */ }) |
-    @Html.ActionLink("Back to List", "Index")
+    @Html.ActionLink("Home", "Index")
 </p>

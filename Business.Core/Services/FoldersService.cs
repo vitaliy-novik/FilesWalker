@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Runtime.Remoting.Channels;
 using Business.Interface.Services;
 using Infrastructure.Entities;
 
@@ -50,6 +51,16 @@ namespace Business.Core.Services
             {
                 dirInfo.Create();
             }
+        }
+
+        public void DeleteFolder(string path)
+        {
+            if (string.IsNullOrEmpty(path))
+            {
+                throw new ArgumentNullException("path");
+            }
+
+            Directory.Delete(path, true);
         }
     }
 }

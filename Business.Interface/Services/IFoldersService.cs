@@ -10,5 +10,7 @@ namespace Business.Interface.Services
         Folder GetDirectories(IUser user, string path);
 
         void CreateFolder(string path);
+
+        void DeleteFolder(string path);
     }
 }

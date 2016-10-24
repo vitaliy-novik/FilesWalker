@@ -13,38 +13,32 @@
     <fieldset>
         <legend>RegistrationViewModel</legend>
 
-        <div class="editor-label">
+        <div class="form-group">
             @Html.LabelFor(model => model.UserName)
-        </div>
-        <div class="editor-field">
             @Html.EditorFor(model => model.UserName)
             @Html.ValidationMessageFor(model => model.UserName)
         </div>
 
-        <div class="editor-label">
+        <div class="form-group">
             @Html.LabelFor(model => model.Email)
-        </div>
-        <div class="editor-field">
             @Html.EditorFor(model => model.Email)
             @Html.ValidationMessageFor(model => model.Email)
         </div>
 
-        <div class="editor-label">
+        <div class="form-group">
             @Html.LabelFor(model => model.Password)
-        </div>
-        <div class="editor-field">
-            @Html.EditorFor(model => model.Password)
+            @Html.PasswordFor(model => model.Password)
             @Html.ValidationMessageFor(model => model.Password)
         </div>
 
         <p>
-            <input type="submit" value="Create" />
+            <input type="submit" value="Register" />
         </p>
     </fieldset>
 }
 
 <div>
-    @Html.ActionLink("Back to List", "Index")
+    @Html.ActionLink("Back to Log In", "Login")
 </div>
 
 @*@section Scripts {

@@ -1,25 +1,52 @@
 ﻿@using System.EnterpriseServices.CompensatingResourceManager
+@using System.Web.Optimization
 <!DOCTYPE html>
 
 <html>
 <head>
+    <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width"/>
+    @Styles.Render("~/Content/css")
+    @Scripts.Render("~/bundles/modernizr")
     <title>@ViewBag.Title</title>
 </head>
 <body>
-    <div>
-        @if (User.Identity.IsAuthenticated)
-        {
-            @Html.ActionLink("Log off", "LogOff", "Account")
-        }
+    <div class="navbar navbar-inverse navbar-fixed-top">
+        <div class="container">
+            <div class="navbar-header">
+                <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                </button>
+                @Html.ActionLink("Files walker", "Index", "Folders", new { area = "" }, new { @class = "navbar-brand" })
+            </div>
+            <div class="navbar-collapse collapse">
+                <ul class="nav navbar-nav">
+                    <li>@Html.ActionLink("Folders", "Index", "Folders")</li>
+                </ul>
+                <ul class="nav navbar-nav navbar-right">
+                    @if (User.Identity.IsAuthenticated)
+                    {
+                        <li>@Html.ActionLink("Log off", "LogOff", "Account")</li>
+                    }
 
-        @if (User.IsInRole("Administrator"))
-        {
-            @Html.ActionLink("Admin", "Index", "Users")
-        }
+                    @if (User.IsInRole("Administrator"))
+                    {
+                        <li>@Html.ActionLink("Admin", "Index", "Users")</li>
+                    }
+                </ul>
+            </div>
+        </div>
     </div>
-    <div>
+    <div class="container body-content">
         @RenderBody()
+        <footer>
+            <p>&copy; @DateTime.Now.Year - ASP.NET Application</p>
+        </footer>
     </div>
+    @Scripts.Render("~/bundles/jquery")
+    @Scripts.Render("~/bundles/bootstrap")
+    @RenderSection("scripts", required: false)
 </body>
 </html>

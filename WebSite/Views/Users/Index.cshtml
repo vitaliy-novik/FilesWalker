@@ -9,14 +9,14 @@
 <h2>Index</h2>
 
 <div>
-    <table>
+    <table class="table">
         <thead>
-        <tr>
-            <th>User name</th>
-            <th>Email</th>
-            <th>Roles</th>
-            <th>Actions</th>
-        </tr>
+            <tr>
+                <th>User name</th>
+                <th>Email</th>
+                <th>Roles</th>
+                <th>Actions</th>
+            </tr>
         </thead>
         <tbody>
             @foreach (UserViewModel user in Model.Users)
@@ -27,17 +27,16 @@
                     <td>
                         @foreach (IRole role in user.Roles)
                         {
-                            <span>@role.Name</span>
+                            <span class="label label-info">@role.Name</span>
                         }
                     </td>
                     <td>
-                        @Html.ActionLink("Delete", "Delete", new {id = user.Id})
-                        @Html.ActionLink("Edit", "Edit", new { id = user.Id })
+                        @Html.ActionLink(" ", "Edit", new { userid = user.Id }, new { @class = "glyphicon glyphicon-edit" })
+                        @Html.ActionLink(" ", "Delete", new { userid = user.Id }, new { @class = "glyphicon glyphicon-remove" })
                     </td>
                 </tr>
             }
         </tbody>
     </table>
         
-    </ul>
 </div>
