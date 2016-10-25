@@ -1,5 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IO;
+using System.Net;
 using System.Threading.Tasks;
 using System.Web.Mvc;
 using Business.Interface.Services;
@@ -59,8 +61,9 @@ namespace WebSite.Controllers
         public ActionResult Create(string path)
         {
             TempData["Path"] = path;
+            ViewBag.Title = "Create";
 
-            return View();
+            return View("CreateFolderDialog");
         }
 
         [Authorize(Roles = "Administrator")]
@@ -75,6 +78,48 @@ namespace WebSite.Controllers
             Folder folder = FolderMapper.Map(viewModel);
             foldersService.CreateFolder(folder.Path);
             return RedirectToRoute("Folders", new { path = folder.Path });
+        }
+
+        [Authorize(Roles = "Administrator")]
+        [HttpPost]
+        public ActionResult Delete(string path, IEnumerable<string> folders)
+        {
+            if (!string.IsNullOrEmpty(path))
+            {
+                foldersService.DeleteFolders(path, folders);
+            }
+
+            return new HttpStatusCodeResult(HttpStatusCode.OK);
+        }
+
+        [Authorize(Roles = "Administrator")]
+        public ActionResult Rename(string path, string folder)
+        {
+            RenameFolderViewModel viewModel = new RenameFolderViewModel()
+            {
+                OldName = folder,
+                Path = path,
+                NewName = folder
+            };
+
+            return View("RenameFolderDialog", viewModel);
+        }
+
+        [Authorize(Roles = "Administrator")]
+        [HttpPost]
+        public ActionResult Rename(RenameFolderViewModel viewModel)
+        {
+            foldersService.RenameFolder(viewModel.Path, viewModel.OldName, viewModel.NewName);
+
+            return RedirectToRoute("Folders", new { path = viewModel.Path });
+        }
+
+        [Authorize(Roles = "Administrator")]
+        public ActionResult CopyTo(string path, string source, string target)
+        {
+            foldersService.CopyTo(path, source, target);
+
+            return RedirectToRoute("Folders", new { path = path });
         }
     }
 }

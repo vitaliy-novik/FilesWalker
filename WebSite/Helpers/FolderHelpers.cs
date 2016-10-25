@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.IO;
+using System.Text;
 using System.Web.Mvc;
 
 namespace WebSite.Helpers
@@ -15,7 +16,18 @@ namespace WebSite.Helpers
 
             TagBuilder a = new TagBuilder("a");
             a.SetInnerText(directoryInfo.Name);
-            a.Attributes.Add(new KeyValuePair<string, string>("href", string.Format("/Folders/{0}/{1}", path, directoryInfo.Name)));
+            StringBuilder href = new StringBuilder("/Folders/");
+            if (!string.IsNullOrEmpty(path))
+            {
+                href.Append(path);
+                if (!href.ToString().EndsWith("/"))
+                {
+                    href.Append("/");
+                }
+            }
+
+            href.Append(directoryInfo.Name);
+            a.Attributes.Add(new KeyValuePair<string, string>("href", href.ToString().Replace(":", "")));
 
             return new MvcHtmlString(a.ToString());
         }

@@ -20,9 +20,14 @@ namespace WebSite
                       "~/Scripts/bootstrap.js",
                       "~/Scripts/respond.js"));
 
+            bundles.Add(new ScriptBundle("~/bundles/folders").Include(
+                      "~/Scripts/folders.js",
+                      "~/Scripts/jquery-ui.min.js"));
+
             bundles.Add(new StyleBundle("~/Content/css").Include(
                       "~/Content/bootstrap.css",
-                      "~/Content/site.css"));
+                      "~/Content/site.css",
+                      "~/Content/jquery-ui.min.css"));
         }
     }
 }

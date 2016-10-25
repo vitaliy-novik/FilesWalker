@@ -14,6 +14,21 @@ namespace WebSite
             routes.IgnoreRoute("{resource}.axd/{*pathInfo}");
 
             routes.MapRoute(
+                "FoldersCopyTo",
+                "Folders/CopyTo/{path}",
+                new { controller = "Folders", action = "CopyTo" });
+
+            routes.MapRoute(
+                "FoldersRename",
+                "Folders/Rename/{path}",
+                new { controller = "Folders", action = "Rename" });
+
+            routes.MapRoute(
+                "FoldersDelete",
+                "Folders/Delete/{*path}",
+                new { controller = "Folders", action = "Delete" });
+
+            routes.MapRoute(
                 "FoldersCreate",
                 "Folders/Create/{*path}",
                 new { controller = "Folders", action = "Create" });

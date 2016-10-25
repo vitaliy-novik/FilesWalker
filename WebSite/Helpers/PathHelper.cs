@@ -23,7 +23,7 @@ namespace WebSite.Helpers
                 href.Append("/");
                 href.Append(folder);
                 href.Append("/");
-                a.Attributes.Add(new KeyValuePair<string, string>("href", href.ToString()));
+                a.Attributes.Add(new KeyValuePair<string, string>("href", href.ToString().Replace(":", "")));
                 linkString.Append(a);
                 linkString.Append("/");
             }

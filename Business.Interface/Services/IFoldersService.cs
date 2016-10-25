@@ -1,4 +1,5 @@
 ﻿
+using System.Collections.Generic;
 using Infrastructure.Entities;
 
 namespace Business.Interface.Services
@@ -12,5 +13,11 @@ namespace Business.Interface.Services
         void CreateFolder(string path);
 
         void DeleteFolder(string path);
+
+        void DeleteFolders(string path, IEnumerable<string> folders);
+
+        void RenameFolder(string path, string oldName, string newName);
+
+        void CopyTo(string path, string source, string target);
     }
 }
