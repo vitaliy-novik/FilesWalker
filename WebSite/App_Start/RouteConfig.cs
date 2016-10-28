@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Web;
-using System.Web.Mvc;
+﻿using System.Web.Mvc;
 using System.Web.Routing;
 
 namespace WebSite
@@ -15,12 +11,12 @@ namespace WebSite
 
             routes.MapRoute(
                 "FoldersCopyTo",
-                "Folders/CopyTo/{path}",
+                "Folders/CopyTo/{*path}",
                 new { controller = "Folders", action = "CopyTo" });
 
             routes.MapRoute(
                 "FoldersRename",
-                "Folders/Rename/{path}",
+                "Folders/Rename/{*path}",
                 new { controller = "Folders", action = "Rename" });
 
             routes.MapRoute(
@@ -32,6 +28,11 @@ namespace WebSite
                 "FoldersCreate",
                 "Folders/Create/{*path}",
                 new { controller = "Folders", action = "Create" });
+
+            routes.MapRoute(
+                "FoldersCreateFile",
+                "Folders/CreateFile/{*path}",
+                new { controller = "Folders", action = "CreateFile" });
 
             routes.MapRoute(
                 "FoldersIndex",

@@ -1,11 +1,11 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Data.Entity;
 using System.Linq;
 using EntityFrameworkContext;
 using EntityFrameworkContext.Entities;
 using Infrastructure.Entities;
 using Repository.Interface.Repositories;
+using Role = EntityFrameworkContext.Entities.Role;
 
 namespace EFRepositories.Repositories
 {
@@ -44,6 +44,36 @@ namespace EFRepositories.Repositories
                 {
                     return account.Roles;
                 }
+            }
+        }
+
+        public void SetUserRoles(IEnumerable<IRole> roles, string userId)
+        {
+            using (FilesWalkerContext context = new FilesWalkerContext())
+            {
+                var dalUser = context.Users.Include("Roles").FirstOrDefault(u => u.Id == userId);
+                if (dalUser == null)
+                {
+                    throw new ArgumentException("User does not exist");
+                }
+
+                foreach (IRole role in roles)
+                {
+                    if (dalUser.Roles.All(r => r.Id != role.Id))
+                    {
+                        dalUser.Roles.Add(context.Roles.Attach(ConvertToDal(role)));
+                    }
+                }
+
+                for (int i = 0; i < dalUser.Roles.Count; ++i)
+                {
+                    if (roles.All(r => r.Id != dalUser.Roles[i].Id))
+                    {
+                        dalUser.Roles.RemoveAt(i);
+                    }
+                }
+
+                context.SaveChanges();
             }
         }
 

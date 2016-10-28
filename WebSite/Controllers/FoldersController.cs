@@ -1,12 +1,16 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Linq;
 using System.Net;
+using System.Net.Mime;
 using System.Threading.Tasks;
 using System.Web.Mvc;
+using System.Web.Routing;
 using Business.Interface.Services;
 using Infrastructure.Entities;
 using Microsoft.AspNet.Identity;
+using WebGrease;
 using WebSite.Managers;
 using WebSite.Mapping;
 using WebSite.Models;
@@ -51,8 +55,15 @@ namespace WebSite.Controllers
         public async Task<ActionResult> Folder(string path)
         {
             IdentityUser user = await userManager.FindByIdAsync(User.Identity.GetUserId());
-
-            Folder folder = foldersService.GetDirectories(user, path);
+            Folder folder;
+            try
+            {
+                folder = foldersService.GetDirectories(user, path);
+            }
+            catch (Exception exception)
+            {
+                return View("ErrorsList", ProcessException(exception));
+            }
 
             return View("Index", FolderMapper.Map(folder));
         }
@@ -60,9 +71,6 @@ namespace WebSite.Controllers
         [Authorize(Roles = "Administrator")]
         public ActionResult Create(string path)
         {
-            TempData["Path"] = path;
-            ViewBag.Title = "Create";
-
             return View("CreateFolderDialog");
         }
 
@@ -72,12 +80,12 @@ namespace WebSite.Controllers
         {
             if (!ModelState.IsValid)
             {
-                return PartialView("Create", viewModel);
+                return PartialView("ErrorsList", ProceedModelState());
             }
 
             Folder folder = FolderMapper.Map(viewModel);
             foldersService.CreateFolder(folder.Path);
-            return RedirectToRoute("Folders", new { path = folder.Path });
+            return Content(viewModel.Path, "url");
         }
 
         [Authorize(Roles = "Administrator")]
@@ -86,10 +94,17 @@ namespace WebSite.Controllers
         {
             if (!string.IsNullOrEmpty(path))
             {
-                foldersService.DeleteFolders(path, folders);
+                try
+                {
+                    foldersService.DeleteFolders(path, folders);
+                }
+                catch (Exception exception)
+                {
+                    return PartialView("ErrorsList", ProcessException(exception));
+                }
             }
 
-            return new HttpStatusCodeResult(HttpStatusCode.OK);
+            return Content(path, "url");
         }
 
         [Authorize(Roles = "Administrator")]
@@ -109,17 +124,61 @@ namespace WebSite.Controllers
         [HttpPost]
         public ActionResult Rename(RenameFolderViewModel viewModel)
         {
-            foldersService.RenameFolder(viewModel.Path, viewModel.OldName, viewModel.NewName);
+            try
+            {
+                foldersService.Rename(viewModel.Path, viewModel.OldName, viewModel.NewName);
+            }
+            catch (Exception exception)
+            {
+                return PartialView("ErrorsList", ProcessException(exception));
+            }
 
-            return RedirectToRoute("Folders", new { path = viewModel.Path });
+            return Content(viewModel.Path, "url");
         }
 
         [Authorize(Roles = "Administrator")]
         public ActionResult CopyTo(string path, string source, string target)
         {
-            foldersService.CopyTo(path, source, target);
+            try
+            {
+                foldersService.CopyTo(path, source, target);
+            }
+            catch (Exception exception)
+            {
+                return PartialView("ErrorsList", ProcessException(exception));
+            }
 
-            return RedirectToRoute("Folders", new { path = path });
+
+            return Content(path, "url");
         }
+
+        [Authorize(Roles = "Administrator")]
+        public ActionResult CreateFile(string path)
+        {
+            return View("CreateFileDialog");
+        }
+
+        [Authorize(Roles = "Administrator")]
+        [HttpPost]
+        public ActionResult CreateFile(CreateFileViewModel viewModel)
+        {
+            if (!ModelState.IsValid)
+            {
+                return PartialView("ErrorsList", ProceedModelState());
+            }
+
+            foldersService.CreateFile(viewModel.Path, viewModel.Name);
+            return Content(viewModel.Path, "url");
+        }
+
+        private IEnumerable<string> ProceedModelState()
+        {
+            return ModelState.Values.SelectMany(value => value.Errors.Select(error => error.ErrorMessage));
+        }
+
+        private IEnumerable<string> ProcessException(Exception exception)
+        {
+            return new List<string>() { exception.Message };
+        } 
     }
 }

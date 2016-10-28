@@ -28,6 +28,7 @@ namespace EFRepositories.Repositories
             TDalEntity dalEntity = ConvertToDal(t);
             using (FilesWalkerContext context = new FilesWalkerContext())
             {
+                context.Set<TDalEntity>().Attach(dalEntity);
                 context.Set<TDalEntity>().Remove(dalEntity);
                 context.SaveChanges();
             }

@@ -1,30 +1,29 @@
-﻿@model WebSite.ViewModels.Folders.RenameFolderViewModel
+﻿@model WebSite.ViewModels.Folders.CreateFileViewModel
 
 @{
     Layout = null;
 }
 
-<div class="modal fade" id="renameFolderModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+<div class="modal fade" id="createFileModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
     <div class="modal-dialog" role="document">
         <div class="modal-content">
             <div class="modal-header">
                 <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-                <h4 class="modal-title" id="myModalLabel">Rename @Model.OldName </h4>
+                <h4 class="modal-title" id="myModalLabel">Create file</h4>
             </div>
             @using (Html.BeginForm())
             {
                 <div id="validationResult"></div>
-                
+
                 <div class="modal-body">
                     @Html.AntiForgeryToken()
                     @Html.ValidationSummary(true)
                     <div class="form-group">
-                        @Html.LabelFor(model => model.NewName)
-                        @Html.TextBoxFor(model => model.NewName, new { @class = "form-control" })
-                        @*@Html.ValidationMessageFor(model => model.NewName)*@
+                        @Html.LabelFor(model => model.Name)
+                        @Html.TextBoxFor(model => model.Name, new { @class = "form-control" })
+                        @*@Html.ValidationMessageFor(model => model.Name)*@
                     </div>
                     @Html.HiddenFor(model => model.Path)
-                    @Html.HiddenFor(model => model.OldName)
                 </div>
                 <div class="modal-footer">
                     <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>

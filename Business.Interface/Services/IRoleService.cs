@@ -8,5 +8,7 @@ namespace Business.Interface.Services
         IEnumerable<IRole> GetRoles(IUser user);
 
         IEnumerable<IRole> GetAllRoles();
+
+        void SetUserRoles(IEnumerable<IRole> roles, string userId);
     }
 }

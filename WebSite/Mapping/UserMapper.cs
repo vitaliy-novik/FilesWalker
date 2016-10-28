@@ -23,7 +23,22 @@ namespace WebSite.Mapping
 
         public static IdentityUser Map(RegistrationViewModel viewModelUser)
         {
-            return Mapper.Map<RegistrationViewModel, IdentityUser>(viewModelUser);
+            return new IdentityUser()
+            {
+                UserName = viewModelUser.UserName,
+                Email = viewModelUser.Email,
+                Password = viewModelUser.Password
+            };
+        }
+
+        public static IdentityUser MapUserToIdentity(IUser user)
+        {
+            return new IdentityUser(user.Id)
+            {
+                UserName = user.UserName,
+                Email = user.Email,
+                Password = user.Password
+            };
         }
 
         public static RegistrationViewModel Map(IdentityUser identityUser)

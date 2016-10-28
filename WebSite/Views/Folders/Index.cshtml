@@ -6,29 +6,35 @@
     ViewBag.Title = "Index";
 }
 
-<div>
+<div id="mainContainer">
     @if (User.IsInRole("Administrator"))
     {
         <div class="row">
-            <div class="dropdown">
-                <button class="btn btn-default dropdown-toggle col-md-2" type="button" id="dropdownMenu1" data-toggle="dropdown" aria-haspopup="true" aria-expanded="true">
-                    <span class="glyphicon glyphicon-plus"></span>
-                    New
-                    <span class="caret"></span>
-                </button>
-                <ul class="dropdown-menu" aria-labelledby="dropdownMenu1">
-                    <li>@Html.ActionLink("Create folder", "Create", "Folders", new { path = Model.Path }, new { id = "createFolderButton", @data_toggle = "modal", @data_target = "#createFolderModal" })</li>
-                    <li>@Html.ActionLink("Create file", "Create", "Files", new { path = Model.Path })</li>
-                </ul>
+            <div class="row col-md-1"></div>
+            <div class="row col-md-2">
+                <div class="dropdown">
+                    <button class="btn btn-default dropdown-toggle" type="button" id="dropdownMenu1" data-toggle="dropdown" aria-haspopup="true" aria-expanded="true">
+                        <span class="glyphicon glyphicon-plus"></span>
+                        New
+                        <span class="caret"></span>
+                    </button>
+                    <ul class="dropdown-menu" aria-labelledby="dropdownMenu1">
+                        <li>@Html.ActionLink("Create folder", "Create", "Folders", new {path = Model.Path}, new {id = "createFolderButton", @data_toggle = "modal", @data_target = "#createFolderModal"})</li>
+                        <li>@Html.ActionLink("Create file", "CreateFile", "Folders", new {path = Model.Path}, new {id = "createFileButton", @data_toggle = "modal", @data_target = "#createFileModal"})</li>
+                    </ul>
+                </div>
             </div>
-            <div class="btn-group hidden col-md-2" role="group" aria-label="Actions" id="actionsPanel">
-                @Html.ActionLink("Delete", "Delete", "Folders", new { path = Model.Path }, new { type = "button", @class = "btn btn-default", id = "delete" })
-                @Html.ActionLink("Rename", "Rename", "Folders", new { path = Model.Path }, new { type = "button", @class = "btn btn-default", id = "renameFolderButton", @data_toggle = "modal", @data_target = "#renameFolderModal" })
-            </div>
+                <div class="btn-group hidden col-md-2" role="group" aria-label="Actions" id="actionsPanel">
+                    @Html.ActionLink("Delete", "Delete", "Folders", new {path = Model.Path}, new {type = "button", @class = "btn btn-default", id = "delete"})
+                    @Html.ActionLink("Rename", "Rename", "Folders", new {path = Model.Path}, new {type = "button", @class = "btn btn-default", id = "renameFolderButton", @data_toggle = "modal", @data_target = "#renameFolderModal"})
+                </div>
         </div>
-        
     }
-    <div class="display-field">
+
+    <div id="validationResult"></div>
+
+    <div class="row">
+        <div class="col-md-1"></div>
         @Html.PathLink(Model.Path)
     </div>
     @Html.HiddenFor(model => model.Path, new { id = "pathInput" })
@@ -37,15 +43,18 @@
             <tr>
                 <th><input type="checkbox" id="selectAll" role="select"></th>
                 <th>Name</th>
-                <th>Date</th>
+                <th>Size</th>
+                <th>Last modified date</th>
             </tr>
         </thead>
         <tbody>
             @foreach (DirectoryInfo folder in Model.FoldersList)
             {
                 <tr id=@folder.Name class="droppable draggable ui-droppable-hover">
+                    @Html.Hidden("Name", folder.Name)
                     <td><input type="checkbox" id=@folder.Name role="select"></td>
                     <td>@Html.FolderLink(folder, Model.Path)</td>
+                    <td></td>
                     <td>@folder.LastWriteTime</td>
                 </tr>
             }
@@ -53,8 +62,10 @@
             @foreach (FileInfo file in Model.FilesList)
             {
                 <tr id=@file.Name class="draggable">
+                    @Html.Hidden("Name", file.Name)
                     <td><input type="checkbox" id=@file.Name role="select"></td>
                     <td>@file.Name</td>
+                    <td>@(file.Length/1024) KB</td>
                     <td>@file.LastWriteTime</td>
                 </tr>
             }

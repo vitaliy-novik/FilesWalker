@@ -19,6 +19,6 @@ namespace Business.Interface.Services
 
         IEnumerable<IUser> GetAllUsers();
 
-        void Updat(IUser user);
+        void Update(IUser user);
     }
 }

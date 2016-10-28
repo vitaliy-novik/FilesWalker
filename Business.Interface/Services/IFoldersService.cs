@@ -12,11 +12,13 @@ namespace Business.Interface.Services
 
         void CreateFolder(string path);
 
+        void CreateFile(string path, string fileName);
+
         void DeleteFolder(string path);
 
         void DeleteFolders(string path, IEnumerable<string> folders);
 
-        void RenameFolder(string path, string oldName, string newName);
+        void Rename(string path, string oldName, string newName);
 
         void CopyTo(string path, string source, string target);
     }

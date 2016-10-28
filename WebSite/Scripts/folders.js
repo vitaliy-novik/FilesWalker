@@ -2,15 +2,19 @@
     $(document).ready(initialize());
 
     function initialize() {
-        $("#createFolderButton").bind("click", function (e) {
-            if ($(".modal").length > 0) {
-                //$(".modal").modal("show");
+        $("#createFolderButton, #createFileButton").bind("click", function (e) {
+            var button = $(e.target);
+            var dialogSelector = button.data("target");
+            var dialog = $(dialogSelector);
+            if (dialog.length > 0) {
                 return;
             }
             var url = $(this).attr("href");
             $.get(url, function (response) {
                 $("body").append(response);
-                $(".modal").modal("show");
+                dialog = $(dialogSelector);
+                BindSendDialogAsync(dialog);
+                dialog.modal("show");
             });
         });
 
@@ -19,10 +23,10 @@
         var checks = [];
         checkBoxes.bind("click", function (e) {
             if (e.target.checked) {
-                checks.push(e.target.getAttribute("id"));
+                checks.push(getNameForCheckBox(e.target));
             } else {
                 mainCheckBox.prop("checked", false);
-                var index = checks.indexOf(e.target.getAttribute("id"));
+                var index = checks.indexOf(getNameForCheckBox(e.target));
                 if (index > -1) {
                     checks.splice(index, 1);
                 }
@@ -35,7 +39,7 @@
             if (mainCheckBox.prop("checked")) {
                 checkBoxes.each(function (index, element) {
                     element.checked = true;
-                    checks.push(element.getAttribute("id"));
+                    checks.push(getNameForCheckBox(element));
                 });
             } else {
                 checkBoxes.each(function (index, element) {
@@ -52,29 +56,45 @@
             var url = $(this).attr("href");
             $.ajax({
                 contentType: 'application/json; charset=utf-8',
-                dataType: 'json',
                 type: 'POST',
                 url: url,
                 data: JSON.stringify({ 'folders': checks }),
                 statusCode: {
-                    200: function() {
-                        location.reload();
+                    200: function(response, status, xhr) {
+                        proceedResponse(response, status, xhr, "#mainContainer");
                     }
                 }
             });
         });
 
         $("#renameFolderButton").bind("click", function (e) {
-            if ($(".modal").length > 0) {
+            var button = $(e.target);
+            var dialogSelector = button.data("target");
+            var dialog = $(dialogSelector);
+            if (dialog.length > 0) {
                 //$(".modal").modal("show");
                 return;
             }
             var url = $(this).attr("href") + "?folder=" + checks[0];
             $.get(url, function (response) {
                 $("body").append(response);
+                var dialog = $(dialogSelector);
+                BindSendDialogAsync(dialog);
                 $(".modal").modal("show");
             });
         });
+    }
+
+    function getNameForCheckBox(checkBox) {
+        var $checkBox = $(checkBox);
+        var row = $checkBox.parent().parent();
+        return getNameForRow(row);
+    }
+
+    function getNameForRow(row) {
+        var $row = $(row);
+        var name = $row.find("[name='Name']").val();
+        return name;
     }
 
     function showActionsPanel(length, main) {
@@ -96,13 +116,42 @@
     });
     $(".droppable").droppable({
         drop: function (event, ui) {
-            var target = $(this).attr("id");
-            var source = ui.draggable.attr("id");
+            var target = getNameForRow(this);
+            var source = getNameForRow(ui.draggable);
             var path = $("#pathInput").val();
-            $.get("/Folders/CopyTo/" + path + "?source=" + source + "&target=" + target);
+            $.get("/Folders/CopyTo/" + path + "?source=" + source + "&target=" + target, function (response, status, xhr) {
+                proceedResponse(response, status, xhr, "#mainContainer");
+            });
         },
         classes: {
             "ui-droppable-hover": "warning"
         }
     });
+
+    function proceedResponse(response, status, xhr, container) {
+        var contentType = xhr.getResponseHeader("Content-Type");
+        if ("url; charset=utf-8" === contentType) {
+            window.location = "/Folders/" + response;
+        } else {
+            var $container = $(container);
+            $("#validationResult", $container).html(response);
+        }
+    }
+
+    function BindSendDialogAsync(dialog) {
+        dialog.find("[type='submit']").bind("click", function (e) {
+            e.preventDefault();
+            var form = $("form", dialog);
+            $.ajax({
+                type: 'POST',
+                url: form.attr("action"),
+                data: form.serializeArray(),
+                statusCode: {
+                    200: function (response, status, xhr) {
+                        proceedResponse(response, status, xhr, dialog);
+                    }
+                }
+            });
+        });
+    }
 })();

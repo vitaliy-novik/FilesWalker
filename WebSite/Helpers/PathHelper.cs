@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System.Linq;
 using System.Text;
 using System.Web.Mvc;
 
@@ -13,22 +14,24 @@ namespace WebSite.Helpers
                 return new MvcHtmlString(string.Empty);
             }
 
-            string[] folders = path.Split('/');
-            StringBuilder linkString = new StringBuilder();
+            TagBuilder ol = new TagBuilder("ol");
+            ol.AddCssClass("breadcrumb");
+            string[] folders = path.Split('/').Where(f => f != string.Empty).ToArray();
             StringBuilder href = new StringBuilder("/Folders");
             foreach (string folder in folders)
             {
+                TagBuilder li = new TagBuilder("li");
                 TagBuilder a = new TagBuilder("a");
                 a.SetInnerText(folder);
                 href.Append("/");
                 href.Append(folder);
                 href.Append("/");
                 a.Attributes.Add(new KeyValuePair<string, string>("href", href.ToString().Replace(":", "")));
-                linkString.Append(a);
-                linkString.Append("/");
+                li.InnerHtml = a.ToString();
+                ol.InnerHtml += li.ToString();
             }
 
-            return new MvcHtmlString(linkString.ToString());
+            return new MvcHtmlString(ol.ToString());
         }
     }
 }

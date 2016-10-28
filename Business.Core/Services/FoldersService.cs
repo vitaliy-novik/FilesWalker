@@ -107,7 +107,6 @@ namespace Business.Core.Services
             }
         }
 
-
         public void DeleteFolders(string path, IEnumerable<string> folders)
         {
             if (string.IsNullOrEmpty(path))
@@ -121,25 +120,14 @@ namespace Business.Core.Services
             }
 
             path = ReplaceDrive(path);
-            FileAttributes attr;
-            string directory;
             foreach (string folder in folders)
             {
-                directory = path + folder;
-                attr = File.GetAttributes(directory);
-                if (attr.HasFlag(FileAttributes.Directory))
-                {
-                    DeleteFolder(directory);
-                }
-                else
-                {
-                    DeleteFile(directory);
-                }
-                
+                string directory = path + folder;
+                ExecuteFor(directory, () => DeleteFile(directory), () => DeleteFolder(directory));
             }
         }
 
-        public void RenameFolder(string path, string oldName, string newName)
+        public void Rename(string path, string oldName, string newName)
         {
             if (string.IsNullOrEmpty(path))
             {
@@ -157,12 +145,9 @@ namespace Business.Core.Services
             }
 
             path = ReplaceDrive(path);
-            string newDirectory = path + "/" + newName;
-            DirectoryInfo dirInfo = new DirectoryInfo(path + "/" + oldName);
-            if (dirInfo.Exists && !Directory.Exists(newDirectory))
-            {
-                dirInfo.MoveTo(newDirectory);
-            }
+            string oldPath = path + "/" + oldName;
+            string newPath = path + "/" + newName;
+            ExecuteFor(oldPath, () => RenameFile(oldPath, newPath), () => RenameFolder(oldPath, newPath));
         }
 
         public void CopyTo(string path, string source, string target)
@@ -185,14 +170,37 @@ namespace Business.Core.Services
             path = ReplaceDrive(path);
             string oldPath = path + "/" + source;
             string newPath = path + "/" + target + "/" + source;
-            FileAttributes attr = File.GetAttributes(oldPath);
+            ExecuteFor(oldPath, () => MoveFile(oldPath, newPath), () => MoveFolder(oldPath, newPath));
+        }
+
+        private void RenameFolder(string oldPath, string newPath)
+        {
+            DirectoryInfo dirInfo = new DirectoryInfo(oldPath);
+            if (dirInfo.Exists && !Directory.Exists(newPath))
+            {
+                dirInfo.MoveTo(newPath);
+            }
+        }
+
+        private void RenameFile(string oldPath, string newPath)
+        {
+            FileInfo fileInfo = new FileInfo(oldPath);
+            if (fileInfo.Exists && !File.Exists(newPath))
+            {
+                fileInfo.MoveTo(newPath);
+            }
+        }
+
+        private void ExecuteFor(string path, Action fileAction, Action directoryAction)
+        {
+            FileAttributes attr = File.GetAttributes(path);
             if (attr.HasFlag(FileAttributes.Directory))
             {
-                MoveFolder(oldPath, newPath);
+                directoryAction();
             }
             else
             {
-                MoveFile(oldPath, newPath);
+                fileAction();
             }
         }
 
@@ -203,8 +211,6 @@ namespace Business.Core.Services
             {
                 dirInfo.MoveTo(target);
             }
-
-            dirInfo.Delete(true);
         }
 
         private void MoveFile(string source, string target)
@@ -214,8 +220,6 @@ namespace Business.Core.Services
             {
                 fileInfo.MoveTo(target);
             }
-
-            fileInfo.Delete();
         }
 
         private string ReplaceDrive(string path)

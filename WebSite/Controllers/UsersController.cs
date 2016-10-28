@@ -4,7 +4,6 @@ using System.Linq;
 using System.Web.Mvc;
 using Business.Interface.Services;
 using Infrastructure.Entities;
-using Microsoft.Practices.ObjectBuilder2;
 using WebSite.Mapping;
 using WebSite.ViewModels.Users;
 
@@ -59,14 +58,26 @@ namespace WebSite.Controllers
         {
             if (ModelState.IsValid)
             {
-                userService.Updat(UserMapper.Map(viewModel));
-
-                return View();
+                var user = UserMapper.Map(viewModel);
+                userService.Update(user);
+                roleService.SetUserRoles(RoleMapper.GetRoles(viewModel.UserInRoles), user.Id);
+                return RedirectToAction("Index");
             }
 
             return View();
         }
 
+        public ActionResult Delete(string id)
+        {
+            if (string.IsNullOrEmpty(id))
+            {
+                return RedirectToAction("Index");
+            }
 
+            IUser user = userService.GetById(id);
+            userService.Delete(user);
+
+            return RedirectToAction("Index");
+        }
     }
 }

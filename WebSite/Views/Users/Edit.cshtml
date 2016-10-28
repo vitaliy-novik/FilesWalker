@@ -11,44 +11,48 @@
     @Html.ValidationSummary(true)
 
     <fieldset>
-        <legend>UserViewModel</legend>
-
         @Html.HiddenFor(model => model.Id)
 
         <div class="form-group">
             @Html.LabelFor(model => model.UserName)
-            @Html.EditorFor(model => model.UserName)
+            @Html.TextBoxFor(model => model.UserName, new { @class = "form-control" })
             @Html.ValidationMessageFor(model => model.UserName)
         </div>
 
         <div class="form-group">
             @Html.LabelFor(model => model.Email)
-            @Html.EditorFor(model => model.Email)
+            @Html.TextBoxFor(model => model.Email, new { @class = "form-control" })
             @Html.ValidationMessageFor(model => model.Email)
         </div>
 
-        <div class="form-group">
+        <div class="form-group hidden">
             @Html.LabelFor(model => model.Password)
-            @Html.PasswordFor(model => model.Password)
+            @Html.PasswordFor(model => model.Password, new { @class = "form-control" })
             @Html.ValidationMessageFor(model => model.Password)
         </div>
 
-        <div class="editor-label">
-            @Html.LabelFor(model => model.UserInRoles)
-        </div>
-        <div>
-            @for (int i = 0; i < Model.UserInRoles.Count; ++i)
-            {
-                <div class="editor-label">
-                    @Html.Label(Model.UserInRoles[i].Role.Name)
-                </div>
-                @Html.HiddenFor(model => model.UserInRoles[i].Role.Id)
-                @Html.HiddenFor(model => model.UserInRoles[i].Role.Name)
-                @Html.CheckBoxFor(model => model.UserInRoles[i].UserInRole)
-            }
+        <div class="form-group">
+            <div class="editor-label">
+                @Html.LabelFor(model => model.UserInRoles)
+            </div>
+            <div>
+                @for (int i = 0; i < Model.UserInRoles.Count; ++i)
+                {
+                    <label>
+                        <div class="checkbox-inline">
+                            @Html.CheckBoxFor(model => model.UserInRoles[i].UserInRole)
+                            @Model.UserInRoles[i].Role.Name
+                        </div>
+
+                    </label>
+                    @Html.HiddenFor(model => model.UserInRoles[i].Role.Id)
+                    @Html.HiddenFor(model => model.UserInRoles[i].Role.Name)
+
+                }
+            </div>
         </div>
         <p>
-            <input type="submit" value="Save" />
+            <input type="submit" value="Save" class="btn btn-primary" />
         </p>
     </fieldset>
 }
@@ -57,6 +61,3 @@
     @Html.ActionLink("Back to List", "Index")
 </div>
 
-@*@section Scripts {
-    @Scripts.Render("~/bundles/jqueryval")
-}*@

@@ -3,14 +3,12 @@ using WebSite.Attributes;
 
 namespace WebSite.ViewModels.Folders
 {
-    public class RenameFolderViewModel
+    public class CreateFileViewModel
     {
-        public string Path { get; set; }
-
-        public string OldName { get; set; }
-
         [Required]
         [FileName("A file name can't contain any of the following characters: \" \\ / : < > ? | *")]
-        public string NewName { get; set; }
+        public string Name { get; set; }
+
+        public string Path { get; set; }
     }
 }

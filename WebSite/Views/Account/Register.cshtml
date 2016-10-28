@@ -1,4 +1,5 @@
-﻿@model WebSite.ViewModels.Account.RegistrationViewModel
+﻿@using System.Web.Optimization
+@model WebSite.ViewModels.Account.RegistrationViewModel
 
 @{
     ViewBag.Title = "Register";
@@ -9,38 +10,32 @@
 @using (Html.BeginForm()) {
     @Html.AntiForgeryToken()
     @Html.ValidationSummary(true)
+    
+    <div class="form-group">
+        @Html.LabelFor(model => model.UserName)
+        @Html.TextBoxFor(model => model.UserName, new { @class = "form-control" })
+        @Html.ValidationMessageFor(model => model.UserName)
+    </div>
 
-    <fieldset>
-        <legend>RegistrationViewModel</legend>
+    <div class="form-group">
+        @Html.LabelFor(model => model.Email)
+        @Html.TextBoxFor(model => model.Email, new { @class = "form-control" })
+        @Html.ValidationMessageFor(model => model.Email)
+    </div>
 
-        <div class="form-group">
-            @Html.LabelFor(model => model.UserName)
-            @Html.EditorFor(model => model.UserName)
-            @Html.ValidationMessageFor(model => model.UserName)
-        </div>
+    <div class="form-group">
+        @Html.LabelFor(model => model.Password)
+        @Html.PasswordFor(model => model.Password, new { @class = "form-control" })
+        @Html.ValidationMessageFor(model => model.Password)
+    </div>
 
-        <div class="form-group">
-            @Html.LabelFor(model => model.Email)
-            @Html.EditorFor(model => model.Email)
-            @Html.ValidationMessageFor(model => model.Email)
-        </div>
-
-        <div class="form-group">
-            @Html.LabelFor(model => model.Password)
-            @Html.PasswordFor(model => model.Password)
-            @Html.ValidationMessageFor(model => model.Password)
-        </div>
-
-        <p>
-            <input type="submit" value="Register" />
-        </p>
-    </fieldset>
+    <p>
+        <input type="submit" value="Register" />
+    </p>
 }
 
 <div>
     @Html.ActionLink("Back to Log In", "Login")
 </div>
 
-@*@section Scripts {
-    @Scripts.Render("~/bundles/jqueryval")
-}*@
+

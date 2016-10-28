@@ -78,7 +78,7 @@ namespace Business.Core.Services
         }
 
 
-        public void Updat(IUser user)
+        public void Update(IUser user)
         {
             if (user == null)
             {

@@ -13,13 +13,15 @@
             </div>
                 @using (Html.BeginForm())
                 {
+                    <div id="validationResult"></div>
+
                     <div class="modal-body">
                         @Html.AntiForgeryToken()
                         @Html.ValidationSummary(true)
                         <div class="form-group">
                             @Html.LabelFor(model => model.Name)
-                            @Html.EditorFor(model => model.Name)
-                            @Html.ValidationMessageFor(model => model.Name)
+                            @Html.TextBoxFor(model => model.Name, new { @class = "form-control" })
+                            @*@Html.ValidationMessageFor(model => model.Name)*@
                         </div>
                         @Html.HiddenFor(model => model.Path)
                     </div>

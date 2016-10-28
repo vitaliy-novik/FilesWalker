@@ -8,5 +8,7 @@ namespace Repository.Interface.Repositories
         IEnumerable<IRole> GetRoles(IUser user);
 
         void SetUserRole(IUser user, IRole role);
+
+        void SetUserRoles(IEnumerable<IRole> roles, string userId);
     }
 }

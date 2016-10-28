@@ -6,6 +6,7 @@ using System.Web;
 using AutoMapper;
 using Business.Interface.Services;
 using Microsoft.AspNet.Identity;
+using WebSite.Mapping;
 using WebSite.Models;
 
 namespace WebSite.Managers
@@ -27,8 +28,6 @@ namespace WebSite.Managers
             {
                 throw new ArgumentNullException("roleService");
             }
-
-            Mapper.Initialize(cfg => cfg.CreateMap<Infrastructure.Entities.IUser, IdentityUser>());
 
             this.userService = userService;
             this.roleService = roleService;
@@ -60,7 +59,7 @@ namespace WebSite.Managers
                 () =>
                 {
                     var user = this.userService.GetById(userId);
-                    return Mapper.Map<Infrastructure.Entities.IUser, IdentityUser>(user);
+                    return UserMapper.MapUserToIdentity(user);
                 });
         }
 
@@ -70,7 +69,7 @@ namespace WebSite.Managers
                 () =>
                 {
                     var account = this.userService.GetByUserName(userName);
-                    return account == null ? null : Mapper.Map<Infrastructure.Entities.IUser, IdentityUser>(account);
+                    return account == null ? null : UserMapper.MapUserToIdentity(account);
                 });
         }
 
