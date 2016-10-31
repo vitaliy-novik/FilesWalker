@@ -2,6 +2,14 @@
     $(document).ready(initialize());
 
     function initialize() {
+        bindCreateButtons();
+        initializeCheckboxes();
+        bindRenameButton();
+        bindDeleteButton();
+        initializeDragAndDrop();
+    }
+
+    function bindCreateButtons() {
         $("#createFolderButton, #createFileButton").bind("click", function (e) {
             var button = $(e.target);
             var dialogSelector = button.data("target");
@@ -13,11 +21,13 @@
             $.get(url, function (response) {
                 $("body").append(response);
                 dialog = $(dialogSelector);
-                BindSendDialogAsync(dialog);
+                bindSendDialogAsync(dialog);
                 dialog.modal("show");
             });
         });
+    }
 
+    function initializeCheckboxes() {
         var checkBoxes = $("input[type='checkbox'][role='select']:not([id='selectAll'])");
         var mainCheckBox = $("#selectAll");
         var checks = [];
@@ -50,51 +60,6 @@
 
             showActionsPanel(checks.length, true);
         });
-
-        $("#delete").bind("click", function (e) {
-            e.preventDefault();
-            var url = $(this).attr("href");
-            $.ajax({
-                contentType: 'application/json; charset=utf-8',
-                type: 'POST',
-                url: url,
-                data: JSON.stringify({ 'folders': checks }),
-                statusCode: {
-                    200: function(response, status, xhr) {
-                        proceedResponse(response, status, xhr, "#mainContainer");
-                    }
-                }
-            });
-        });
-
-        $("#renameFolderButton").bind("click", function (e) {
-            var button = $(e.target);
-            var dialogSelector = button.data("target");
-            var dialog = $(dialogSelector);
-            if (dialog.length > 0) {
-                //$(".modal").modal("show");
-                return;
-            }
-            var url = $(this).attr("href") + "?folder=" + checks[0];
-            $.get(url, function (response) {
-                $("body").append(response);
-                var dialog = $(dialogSelector);
-                BindSendDialogAsync(dialog);
-                $(".modal").modal("show");
-            });
-        });
-    }
-
-    function getNameForCheckBox(checkBox) {
-        var $checkBox = $(checkBox);
-        var row = $checkBox.parent().parent();
-        return getNameForRow(row);
-    }
-
-    function getNameForRow(row) {
-        var $row = $(row);
-        var name = $row.find("[name='Name']").val();
-        return name;
     }
 
     function showActionsPanel(length, main) {
@@ -110,23 +75,74 @@
         }
     }
 
-    $(".draggable").draggable({
-        drag: function(event, ui) { },
-        helper: 'clone'
-    });
-    $(".droppable").droppable({
-        drop: function (event, ui) {
-            var target = getNameForRow(this);
-            var source = getNameForRow(ui.draggable);
-            var path = $("#pathInput").val();
-            $.get("/Folders/CopyTo/" + path + "?source=" + source + "&target=" + target, function (response, status, xhr) {
-                proceedResponse(response, status, xhr, "#mainContainer");
+    function bindRenameButton() {
+        $("#renameFolderButton").bind("click", function (e) {
+            var button = $(e.target);
+            var dialogSelector = button.data("target");
+            var dialog = $(dialogSelector);
+            if (dialog.length > 0) {
+                //$(".modal").modal("show");
+                return;
+            }
+            var url = $(this).attr("href") + "?folder=" + checks[0];
+            $.get(url, function (response) {
+                $("body").append(response);
+                var dialog = $(dialogSelector);
+                bindSendDialogAsync(dialog);
+                $(".modal").modal("show");
             });
-        },
-        classes: {
-            "ui-droppable-hover": "warning"
-        }
-    });
+        });
+    }
+
+    function bindDeleteButton() {
+        $("#delete").bind("click", function (e) {
+            e.preventDefault();
+            var url = $(this).attr("href");
+            $.ajax({
+                contentType: 'application/json; charset=utf-8',
+                type: 'POST',
+                url: url,
+                data: JSON.stringify({ 'folders': checks }),
+                statusCode: {
+                    200: function (response, status, xhr) {
+                        proceedResponse(response, status, xhr, "#mainContainer");
+                    }
+                }
+            });
+        });
+    }
+
+    function initializeDragAndDrop() {
+        $(".draggable").draggable({
+            drag: function (event, ui) { },
+            helper: 'clone'
+        });
+        $(".droppable").droppable({
+            drop: function (event, ui) {
+                var target = getNameForRow(this);
+                var source = getNameForRow(ui.draggable);
+                var path = $("#pathInput").val();
+                $.get("/Folders/CopyTo/" + path + "?source=" + source + "&target=" + target, function (response, status, xhr) {
+                    proceedResponse(response, status, xhr, "#mainContainer");
+                });
+            },
+            classes: {
+                "ui-droppable-hover": "warning"
+            }
+        });
+    }
+
+    function getNameForCheckBox(checkBox) {
+        var $checkBox = $(checkBox);
+        var row = $checkBox.parent().parent();
+        return getNameForRow(row);
+    }
+
+    function getNameForRow(row) {
+        var $row = $(row);
+        var name = $row.find("[name='Name']").val();
+        return name;
+    }
 
     function proceedResponse(response, status, xhr, container) {
         var contentType = xhr.getResponseHeader("Content-Type");
@@ -138,7 +154,7 @@
         }
     }
 
-    function BindSendDialogAsync(dialog) {
+    function bindSendDialogAsync(dialog) {
         dialog.find("[type='submit']").bind("click", function (e) {
             e.preventDefault();
             var form = $("form", dialog);
@@ -153,7 +169,7 @@
                     414: function (response, status, xhr) {
                         $("#validationResult", dialog).html('<div class="alert alert-danger alert-dismissible" role="alert"><button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>' +
                            'Sorry, your uri is to long for us' + '</div>');
-                    } 
+                    }
                 }
             });
         });
