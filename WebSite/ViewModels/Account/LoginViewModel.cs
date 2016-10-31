@@ -1,14 +1,14 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Web;
+﻿using System.ComponentModel.DataAnnotations;
 
 namespace WebSite.ViewModels.Account
 {
     public class LoginViewModel
     {
-        public string Email { get; set; }
+        [Required]
+        [Display(Name = "Name")]
+        public string UserName { get; set; }
 
+        [Required]
         public string Password { get; set; }
     }
 }

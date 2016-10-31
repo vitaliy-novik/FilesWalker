@@ -1,7 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Security.Claims;
+﻿using System.Security.Claims;
 using System.Threading.Tasks;
 using System.Web;
 using System.Web.Mvc;
@@ -34,7 +31,7 @@ namespace WebSite.Controllers
         {
             if (ModelState.IsValid)
             {
-                IdentityUser user = await userManager.FindAsync(model.Email, model.Password);
+                IdentityUser user = await userManager.FindAsync(model.UserName, model.Password);
 
                 if (user != null)
                 {
@@ -93,8 +90,12 @@ namespace WebSite.Controllers
                     return RedirectToAction("Login", "Account");
                 }
                 else
-                    ModelState.AddModelError("UserName", "Error while creating the user!");
+                {
+                    var errors = string.Join(",", result.Errors);
+                    ModelState.AddModelError(string.Empty, errors);
+                }
             }
+
             return View(model);
         }
 

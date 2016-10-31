@@ -69,7 +69,7 @@ namespace Business.Core.Services
                 throw new ArgumentNullException("userName");
             }
 
-            return this.userRepository.GetAll(user => user.Email == userName).FirstOrDefault();
+            return this.userRepository.GetAll(user => user.UserName == userName).FirstOrDefault();
         }
 
         public IEnumerable<IUser> GetAllUsers()
