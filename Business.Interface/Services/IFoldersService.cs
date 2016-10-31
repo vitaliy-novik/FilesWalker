@@ -6,9 +6,9 @@ namespace Business.Interface.Services
 {
     public interface IFoldersService
     {
-        Folder GetDirectories(IUser user);
+        Folder GetDirectories();
 
-        Folder GetDirectories(IUser user, string path);
+        Folder GetDirectories(string path);
 
         void CreateFolder(string path);
 

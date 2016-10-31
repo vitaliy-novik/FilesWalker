@@ -23,3 +23,10 @@ select,
 textarea {
     max-width: 280px;
 }
+
+footer {
+    position: fixed;
+    height: 50px;
+    bottom: 0;
+    width: 100%;
+}

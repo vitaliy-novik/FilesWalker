@@ -64,7 +64,7 @@
                 <tr id=@file.Name class="draggable">
                     @Html.Hidden("Name", file.Name)
                     <td><input type="checkbox" id=@file.Name role="select"></td>
-                    <td>@file.Name</td>
+                    <td><span class="glyphicon glyphicon-file">@file.Name</span></td>
                     <td>@(file.Length/1024) KB</td>
                     <td>@file.LastWriteTime</td>
                 </tr>

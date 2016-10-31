@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Web.Mvc;
@@ -15,13 +16,21 @@ namespace WebSite.Helpers
             }
 
             TagBuilder ol = new TagBuilder("ol");
+            TagBuilder li = new TagBuilder("li");
+            TagBuilder a = new TagBuilder("a");
+
+            a.SetInnerText(Environment.MachineName);
+            a.Attributes.Add(new KeyValuePair<string, string>("href", "/Folders/Index"));
+            li.InnerHtml = a.ToString();
             ol.AddCssClass("breadcrumb");
+            ol.InnerHtml += li.ToString();
+
             string[] folders = path.Split('/').Where(f => f != string.Empty).ToArray();
             StringBuilder href = new StringBuilder("/Folders");
             foreach (string folder in folders)
             {
-                TagBuilder li = new TagBuilder("li");
-                TagBuilder a = new TagBuilder("a");
+                li = new TagBuilder("li");
+                a = new TagBuilder("a");
                 a.SetInnerText(folder);
                 href.Append("/");
                 href.Append(folder);

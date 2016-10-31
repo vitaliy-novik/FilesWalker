@@ -59,7 +59,7 @@ namespace WebSite.Controllers
             if (ModelState.IsValid)
             {
                 var user = UserMapper.Map(viewModel);
-                userService.Update(user);
+                //userService.Update(user);
                 roleService.SetUserRoles(RoleMapper.GetRoles(viewModel.UserInRoles), user.Id);
                 return RedirectToAction("Index");
             }

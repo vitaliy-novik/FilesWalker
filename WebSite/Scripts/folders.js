@@ -149,7 +149,11 @@
                 statusCode: {
                     200: function (response, status, xhr) {
                         proceedResponse(response, status, xhr, dialog);
-                    }
+                    },
+                    414: function (response, status, xhr) {
+                        $("#validationResult", dialog).html('<div class="alert alert-danger alert-dismissible" role="alert"><button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>' +
+                           'Sorry, your uri is to long for us' + '</div>');
+                    } 
                 }
             });
         });

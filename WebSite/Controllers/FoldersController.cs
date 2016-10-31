@@ -1,64 +1,44 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.IO;
 using System.Linq;
-using System.Net;
-using System.Net.Mime;
-using System.Threading.Tasks;
 using System.Web.Mvc;
-using System.Web.Routing;
 using Business.Interface.Services;
 using Infrastructure.Entities;
-using Microsoft.AspNet.Identity;
-using WebGrease;
-using WebSite.Managers;
 using WebSite.Mapping;
-using WebSite.Models;
 using WebSite.ViewModels.Folders;
 
 namespace WebSite.Controllers
 {
     public class FoldersController : Controller
     {
-        private readonly IUserManager<IdentityUser> userManager;
-
         private readonly IFoldersService foldersService;
 
-        public FoldersController(IFoldersService foldersService, IUserManager<IdentityUser> userManager)
+        public FoldersController(IFoldersService foldersService)
         {
             if (foldersService == null)
             {
                 throw new ArgumentNullException("foldersService");
             }
 
-            if (userManager == null)
-            {
-                throw new ArgumentNullException("userManager");
-            }
-
             this.foldersService = foldersService;
-            this.userManager = userManager;
         }
 
 
         [Authorize]
-        public async Task<ActionResult> Index()
+        public ActionResult Index()
         {
-            IdentityUser user = await userManager.FindByIdAsync(User.Identity.GetUserId());
-
-            Folder folder = foldersService.GetDirectories(user);
+            Folder folder = foldersService.GetDirectories();
 
             return View(FolderMapper.Map(folder));
         }
 
         [Authorize]
-        public async Task<ActionResult> Folder(string path)
+        public ActionResult Folder(string path)
         {
-            IdentityUser user = await userManager.FindByIdAsync(User.Identity.GetUserId());
             Folder folder;
             try
             {
-                folder = foldersService.GetDirectories(user, path);
+                folder = foldersService.GetDirectories(path);
             }
             catch (Exception exception)
             {
@@ -84,7 +64,15 @@ namespace WebSite.Controllers
             }
 
             Folder folder = FolderMapper.Map(viewModel);
-            foldersService.CreateFolder(folder.Path);
+            try
+            {
+                foldersService.CreateFolder(folder.Path);
+            }
+            catch (Exception exception)
+            {
+                return PartialView("ErrorsList", ProcessException(exception));
+            }
+            
             return Content(viewModel.Path, "url");
         }
 

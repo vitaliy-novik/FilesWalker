@@ -17,7 +17,7 @@ namespace Business.Core.Services
             allDrives = DriveInfo.GetDrives();
         }
 
-        public Folder GetDirectories(IUser user)
+        public Folder GetDirectories()
         {
             Folder folder = new Folder();
             foreach (DriveInfo driveInfo in FoldersService.allDrives)
@@ -28,16 +28,17 @@ namespace Business.Core.Services
             return folder;
         }
 
-        public Folder GetDirectories(IUser user, string path)
+        public Folder GetDirectories(string path)
         {
             Folder folder = new Folder();
             folder.Path = path;
 
             path = ReplaceDrive(path);
+            
             DirectoryInfo directoryInfo = new DirectoryInfo(path);
 
-            folder.FoldersList = new List<DirectoryInfo>(directoryInfo.GetDirectories());
-            folder.FilesList = new List<FileInfo>(directoryInfo.GetFiles());
+            folder.FoldersList = new List<DirectoryInfo>(directoryInfo.EnumerateDirectories());
+            folder.FilesList = new List<FileInfo>(directoryInfo.EnumerateFiles());
             
             return folder;
         }
@@ -70,10 +71,10 @@ namespace Business.Core.Services
             }
 
             path = ReplaceDrive(path);
-            FileInfo fileInfo = new FileInfo(path + "/" + fileName);
+            FileInfo fileInfo = new FileInfo(Path.Combine(path, fileName));
             if (!fileInfo.Exists)
             {
-                fileInfo.Create();
+                fileInfo.Create().Close();
             }
         }
 
@@ -145,8 +146,8 @@ namespace Business.Core.Services
             }
 
             path = ReplaceDrive(path);
-            string oldPath = path + "/" + oldName;
-            string newPath = path + "/" + newName;
+            string oldPath = Path.Combine(path, oldName);
+            string newPath = Path.Combine(path, newName);
             ExecuteFor(oldPath, () => RenameFile(oldPath, newPath), () => RenameFolder(oldPath, newPath));
         }
 
@@ -168,8 +169,8 @@ namespace Business.Core.Services
             }
 
             path = ReplaceDrive(path);
-            string oldPath = path + "/" + source;
-            string newPath = path + "/" + target + "/" + source;
+            string oldPath = Path.Combine(path, source);
+            string newPath = Path.Combine(path + Path.DirectorySeparatorChar + target, source);
             ExecuteFor(oldPath, () => MoveFile(oldPath, newPath), () => MoveFolder(oldPath, newPath));
         }
 
@@ -224,8 +225,8 @@ namespace Business.Core.Services
 
         private string ReplaceDrive(string path)
         {
-            string[] folders = path.Split('/');
-            string drive = folders[0] + ":";
+            string[] folders = path.Split('/').Where(f => !string.IsNullOrEmpty(f)).ToArray();
+            string drive = folders[0] + Path.VolumeSeparatorChar;
             StringBuilder newPath = new StringBuilder();
             if (allDrives.Any(dr => dr.Name.StartsWith(drive)))
             {
@@ -233,7 +234,7 @@ namespace Business.Core.Services
                 for (int i = 1; i < folders.Length; ++i)
                 {
                     newPath.Append(folders[i]);
-                    newPath.Append("/");
+                    newPath.Append(Path.DirectorySeparatorChar);
                 }
             }
 
