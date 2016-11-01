@@ -60,6 +60,7 @@
   <ItemGroup>
     <Compile Include="Services\FoldersServiceTests.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Services\UserServiceTests.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />
@@ -76,6 +77,10 @@
     <ProjectReference Include="..\Infrastructure\Infrastructure.csproj">
       <Project>{0332c6f8-18f2-4754-8a30-72c92cfd7ede}</Project>
       <Name>Infrastructure</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Interface\Repository.Interface.csproj">
+      <Project>{ca0dd2c8-f4ae-459e-ae44-018eaf4bf593}</Project>
+      <Name>Repository.Interface</Name>
     </ProjectReference>
   </ItemGroup>
   <Choose>

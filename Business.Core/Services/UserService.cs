@@ -53,7 +53,7 @@ namespace Business.Core.Services
 
         public IUser GetById(string userId)
         {
-            if (userId == null)
+            if (string.IsNullOrEmpty(userId))
             {
                 throw new ArgumentNullException("userId");
             }
@@ -64,7 +64,7 @@ namespace Business.Core.Services
 
         public IUser GetByUserName(string userName)
         {
-            if (userName == null)
+            if (string.IsNullOrEmpty(userName))
             {
                 throw new ArgumentNullException("userName");
             }

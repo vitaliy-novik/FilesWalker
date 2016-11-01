@@ -7,7 +7,7 @@
     $(document).ready(initialize());
 
     function initialize() {
-        checkBoxes = $("input[type='checkbox'][role='select']:not([id='selectAll']):not([readonly])");
+        checkBoxes = $("input[type='checkbox'][role='select']:not([id='selectAll']):not([readonly]):not([disabled])");
         mainCheckBox = $("#selectAll");
 
         bindCreateButtons();
