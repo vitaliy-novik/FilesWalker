@@ -155,7 +155,15 @@ namespace WebSite.Controllers
                 return PartialView("ErrorsList", ProceedModelState());
             }
 
-            foldersService.CreateFile(viewModel.Path, viewModel.Name);
+            try
+            {
+                foldersService.CreateFile(viewModel.Path, viewModel.Name);
+            }
+            catch (Exception exception)
+            {
+                return PartialView("ErrorsList", ProcessException(exception));
+            }
+            
             return Content(viewModel.Path, "url");
         }
 

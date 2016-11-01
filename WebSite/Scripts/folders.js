@@ -1,7 +1,15 @@
-﻿(function() {
+﻿(function () {
+
+    var checkBoxes;
+    var mainCheckBox;
+    var checks = [];
+
     $(document).ready(initialize());
 
     function initialize() {
+        checkBoxes = $("input[type='checkbox'][role='select']:not([id='selectAll']):not([readonly])");
+        mainCheckBox = $("#selectAll");
+
         bindCreateButtons();
         initializeCheckboxes();
         bindRenameButton();
@@ -28,9 +36,7 @@
     }
 
     function initializeCheckboxes() {
-        var checkBoxes = $("input[type='checkbox'][role='select']:not([id='selectAll'])");
-        var mainCheckBox = $("#selectAll");
-        var checks = [];
+        
         checkBoxes.bind("click", function (e) {
             if (e.target.checked) {
                 checks.push(getNameForCheckBox(e.target));
