@@ -176,13 +176,5 @@ namespace WebSite.Controllers
         {
             return new List<string>() { exception.Message };
         }
-
-        private Action<int> meth()
-        {
-            return m =>
-            {
-                return;
-            };
-        } 
     }
 }

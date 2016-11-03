@@ -8,15 +8,28 @@ using Infrastructure.Entities;
 
 namespace Business.Core.Services
 {
+    /// <summary>
+    /// Class for file system operations
+    /// </summary>
     public class FoldersService : IFoldersService
     {
+        /// <summary>
+        /// All logical drives on a computer.
+        /// </summary>
         private static DriveInfo[] allDrives;
 
+        /// <summary>
+        /// Initializes drives
+        /// </summary>
         static FoldersService()
         {
             allDrives = DriveInfo.GetDrives();
         }
 
+        /// <summary>
+        /// Get root directories on a computer.
+        /// </summary>
+        /// <returns>Drives list in <see cref="Folder"/></returns>
         public Folder GetDirectories()
         {
             Folder folder = new Folder();
@@ -28,10 +41,14 @@ namespace Business.Core.Services
             return folder;
         }
 
+        /// <summary>
+        /// Get content of the directory specified by path
+        /// </summary>
+        /// <param name="path">Path to the directory</param>
+        /// <returns>Directories and files in the directory</returns>
         public Folder GetDirectories(string path)
         {
-            Folder folder = new Folder();
-            folder.Path = path;
+            Folder folder = new Folder {Path = path};
 
             path = ReplaceDrive(path);
             
@@ -43,6 +60,10 @@ namespace Business.Core.Services
             return folder;
         }
 
+        /// <summary>
+        /// Create directory with specifid path
+        /// </summary>
+        /// <param name="path">New drectory path</param>
         public void CreateFolder(string path)
         {
             if (string.IsNullOrEmpty(path))
@@ -58,6 +79,11 @@ namespace Business.Core.Services
             }
         }
 
+        /// <summary>
+        /// Create file in the directry specified by path
+        /// </summary>
+        /// <param name="path">Path to the target directory</param>
+        /// <param name="fileName">New file name</param>
         public void CreateFile(string path, string fileName)
         {
             if (string.IsNullOrEmpty(path))
@@ -78,6 +104,10 @@ namespace Business.Core.Services
             }
         }
 
+        /// <summary>
+        /// Delete directory specified by path
+        /// </summary>
+        /// <param name="path">Target directory path</param>
         public void DeleteFolder(string path)
         {
             if (string.IsNullOrEmpty(path))
@@ -93,6 +123,10 @@ namespace Business.Core.Services
             }
         }
 
+        /// <summary>
+        /// Delete file specified by path
+        /// </summary>
+        /// <param name="path">Target file path</param>
         public void DeleteFile(string path)
         {
             if (string.IsNullOrEmpty(path))
@@ -108,6 +142,11 @@ namespace Business.Core.Services
             }
         }
 
+        /// <summary>
+        /// Delete a list of files and directories in the specified directory
+        /// </summary>
+        /// <param name="path">Path to the directory</param>
+        /// <param name="folders">List of files and directories names</param>
         public void DeleteFolders(string path, IEnumerable<string> folders)
         {
             if (string.IsNullOrEmpty(path))
@@ -128,6 +167,12 @@ namespace Business.Core.Services
             }
         }
 
+        /// <summary>
+        /// Rename file or directory in specified by path directory
+        /// </summary>
+        /// <param name="path">Path to directory</param>
+        /// <param name="oldName">Name of target file or directory</param>
+        /// <param name="newName">New name</param>
         public void Rename(string path, string oldName, string newName)
         {
             if (string.IsNullOrEmpty(path))
@@ -151,6 +196,12 @@ namespace Business.Core.Services
             ExecuteFor(oldPath, () => RenameFile(oldPath, newPath), () => RenameFolder(oldPath, newPath));
         }
 
+        /// <summary>
+        /// Move file or directorie in specified catalog to another directory in this catalog
+        /// </summary>
+        /// <param name="path">Path to the catalog</param>
+        /// <param name="source">File or directory name</param>
+        /// <param name="target">Target directory name</param>
         public void CopyTo(string path, string source, string target)
         {
             if (string.IsNullOrEmpty(path))
@@ -192,6 +243,12 @@ namespace Business.Core.Services
             }
         }
 
+        /// <summary>
+        /// Define if path correspond to the directory or file and perform specified action
+        /// </summary>
+        /// <param name="path">Path</param>
+        /// <param name="fileAction">Action to perform for file</param>
+        /// <param name="directoryAction">Action to perform for directory</param>
         private void ExecuteFor(string path, Action fileAction, Action directoryAction)
         {
             FileAttributes attr = File.GetAttributes(path);
@@ -223,6 +280,11 @@ namespace Business.Core.Services
             }
         }
 
+        /// <summary>
+        /// Format path according to the OS standarts
+        /// </summary>
+        /// <param name="path">Initial path</param>
+        /// <returns>Formated path</returns>
         private string ReplaceDrive(string path)
         {
             string[] folders = path.Split('/').Where(f => !string.IsNullOrEmpty(f)).ToArray();
