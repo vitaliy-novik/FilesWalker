@@ -1,5 +1,4 @@
-﻿using AutoMapper;
-using Infrastructure.Entities;
+﻿using Infrastructure.Entities;
 using WebSite.ViewModels.Folders;
 
 namespace WebSite.Mapping

@@ -16,7 +16,15 @@ namespace WebSite.Helpers
 
             TagBuilder a = new TagBuilder("a");
             TagBuilder span = new TagBuilder("span");
-            span.AddCssClass("glyphicon glyphicon-folder-open");
+            if (directoryInfo.Parent == null)
+            {
+                span.AddCssClass("glyphicon glyphicon-cd");
+            }
+            else
+            {
+                span.AddCssClass("glyphicon glyphicon-folder-open");
+            }
+
             a.InnerHtml = span.ToString() + " " + directoryInfo.Name;
             StringBuilder href = new StringBuilder("/Folders/");
             if (!string.IsNullOrEmpty(path))

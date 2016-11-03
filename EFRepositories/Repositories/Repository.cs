@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using System.Data.Entity;
 using System.Linq;
 using EntityFrameworkContext;
-using EntityFrameworkContext.Entities;
 using Repository.Interface.Repositories;
 using Infrastructure.Entities;
 

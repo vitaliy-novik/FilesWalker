@@ -17,7 +17,6 @@ namespace WebSite.Mapping
         {
             Mapper.Initialize(cfg => cfg.CreateMap<IdentityUser, RegistrationViewModel>());
             Mapper.Initialize(cfg => cfg.CreateMap<RegistrationViewModel, IdentityUser>());
-            Mapper.Initialize(cfg => cfg.CreateMap<UserViewModel, IUser>());
             Mapper.Initialize(cfg => cfg.CreateMap<EditUserViewModel, IdentityUser>());
         }
 

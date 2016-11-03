@@ -175,6 +175,14 @@ namespace WebSite.Controllers
         private IEnumerable<string> ProcessException(Exception exception)
         {
             return new List<string>() { exception.Message };
+        }
+
+        private Action<int> meth()
+        {
+            return m =>
+            {
+                return;
+            };
         } 
     }
 }

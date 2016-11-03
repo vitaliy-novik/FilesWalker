@@ -52,34 +52,35 @@
             </tr>
         </thead>
         <tbody>
-            @foreach (DirectoryInfo folder in Model.FoldersList)
-            {
-                <tr id=@folder.Name class="droppable draggable ui-droppable-hover">
-                    @Html.Hidden("Name", folder.Name)
-                    <td>@if (User.IsInRole("Administrator"))
-                        {
-                            @Html.CheckBox(@folder.Name, new { id = @folder.Name, role = "select" }).Disable(folder.Attributes.HasFlag(FileAttributes.ReadOnly))
-                        }
-                    </td>
-                    <td>@Html.FolderLink(folder, Model.Path)</td>
-                    <td></td>
-                    <td>@folder.LastWriteTime</td>
-                </tr>
-            }
+        @foreach (DirectoryInfo folder in Model.FoldersList)
+        {
+            <tr id=@folder.Name class="droppable draggable ui-droppable-hover">
+                @Html.Hidden("Name", folder.Name)
+                <td>@if (User.IsInRole("Administrator"))
+                    {
+                        @Html.CheckBox(@folder.Name, new {id = @folder.Name, role = "select"}).Disable(folder.Attributes.HasFlag(FileAttributes.ReadOnly))
+                    }
+                </td>
+                <td>@Html.FolderLink(folder, Model.Path)</td>
+                <td></td>
+                <td>@folder.LastWriteTime</td>
+            </tr>
+        }
 
-            @foreach (FileInfo file in Model.FilesList)
-            {
-                <tr id=@file.Name class="draggable">
-                    @Html.Hidden("Name", file.Name)
-                    <td>@if (User.IsInRole("Administrator"))
-                        {
-                            @Html.CheckBox(@file.Name, new { id = @file.Name, role = "select" }).Disable(file.IsReadOnly)
-                        }</td>
-                    <td><span class="glyphicon glyphicon-file">@file.Name</span></td>
-                    <td>@(file.Length/1024) KB</td>
-                    <td>@file.LastWriteTime</td>
-                </tr>
-            }
+        @foreach (FileInfo file in Model.FilesList)
+        {
+            <tr id=@file.Name class="draggable">
+                @Html.Hidden("Name", file.Name)
+                <td>@if (User.IsInRole("Administrator"))
+                    {
+                        @Html.CheckBox(@file.Name, new {id = @file.Name, role = "select"}).Disable(file.IsReadOnly)
+                    }
+                </td>
+                <td><span class="glyphicon glyphicon-file">@file.Name</span></td>
+                <td>@(file.Length/1024) KB</td>
+                <td>@file.LastWriteTime</td>
+            </tr>
+        }
         </tbody>
 
     </table>

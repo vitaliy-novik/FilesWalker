@@ -48,15 +48,12 @@
     <Compile Include="Entities\IRole.cs" />
     <Compile Include="Entities\IUser.cs" />
     <Compile Include="Entities\Role.cs" />
-    <Compile Include="Enums\UserRole.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />
   </ItemGroup>
-  <ItemGroup>
-    <Folder Include="Mapping\" />
-  </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.
