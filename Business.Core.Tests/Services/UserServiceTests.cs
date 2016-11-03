@@ -117,12 +117,12 @@ namespace Business.Core.Tests.Services
         [TestMethod]
         public void GetAllUsers()
         {
-            IEnumerable<IUser> users = new List<IUser>() { user.Object };
+            List<IUser> users = new List<IUser>() { user.Object };
             userRepository.Setup(userRep => userRep.GetAll()).Returns(users);
 
             IEnumerable<IUser> returnedUsers = userService.GetAllUsers();
 
-            CollectionAssert.AreEqual(users.ToList(), returnedUsers.ToList());
+            CollectionAssert.AreEqual(users, returnedUsers.ToList());
         }
 
         [TestMethod]

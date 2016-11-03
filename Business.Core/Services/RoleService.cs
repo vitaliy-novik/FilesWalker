@@ -62,6 +62,11 @@ namespace Business.Core.Services
             {
                 throw new ArgumentNullException("roles");
             }
+
+            if (string.IsNullOrEmpty(userId))
+            {
+                throw new ArgumentNullException("userId");
+            }
              
             roleRepository.SetUserRoles(roles, userId);
         }
