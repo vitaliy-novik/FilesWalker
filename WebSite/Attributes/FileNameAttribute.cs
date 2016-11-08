@@ -1,12 +1,13 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.IO;
 using System.Linq;
-using System.Web;
 
 namespace WebSite.Attributes
 {
+    /// <summary>
+    /// Attribute class for files and directories names validation
+    /// </summary>
     [AttributeUsage(AttributeTargets.Property)]
     public class FileNameAttribute : ValidationAttribute
     {

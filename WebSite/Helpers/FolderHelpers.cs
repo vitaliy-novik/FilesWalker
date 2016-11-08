@@ -5,8 +5,18 @@ using System.Web.Mvc;
 
 namespace WebSite.Helpers
 {
+    /// <summary>
+    /// HtmlHelper extensions class for Directories
+    /// </summary>
     public static class FolderHelpers
     {
+        /// <summary>
+        /// Returns link for directory
+        /// </summary>
+        /// <param name="html">HtmlHelper instance</param>
+        /// <param name="directoryInfo">Contains info about directory</param>
+        /// <param name="path">Path to the directory</param>
+        /// <returns>Directory link</returns>
         public static MvcHtmlString FolderLink(this HtmlHelper html, DirectoryInfo directoryInfo, string path)
         {
             if (directoryInfo == null)

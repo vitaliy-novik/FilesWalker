@@ -1,13 +1,18 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Data.Entity;
-using System.Linq;
 using EntityFrameworkContext.Entities;
 
 namespace EntityFrameworkContext
 {
+    /// <summary>
+    /// Entity Framework context initializer
+    /// </summary>
     internal class DbContextInitializer : CreateDatabaseIfNotExists<FilesWalkerContext>
     {
+        /// <summary>
+        /// Adds roles and administrator to data base
+        /// </summary>
+        /// <param name="context"></param>
         protected override void Seed(FilesWalkerContext context)
         {
             List<Role> roles = new List<Role>()

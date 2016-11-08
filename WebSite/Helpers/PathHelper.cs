@@ -6,8 +6,17 @@ using System.Web.Mvc;
 
 namespace WebSite.Helpers
 {
+    /// <summary>
+    /// HtmlHelper extensions class for working with file system paths
+    /// </summary>
     public static class PathHelper
     {
+        /// <summary>
+        /// Returns breadcrumb element with directories links
+        /// </summary>
+        /// <param name="html">HtmlHelper</param>
+        /// <param name="path">File system path string</param>
+        /// <returns>Breadcrumb html element</returns>
         public static MvcHtmlString PathLink(this HtmlHelper html, string path)
         {
             if (string.IsNullOrEmpty(path))

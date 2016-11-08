@@ -2,6 +2,7 @@
 using System.Web.Mvc;
 using System.Web.Optimization;
 using System.Web.Routing;
+using NLog;
 
 namespace WebSite
 {
@@ -9,6 +10,8 @@ namespace WebSite
     // visit http://go.microsoft.com/?LinkId=9394801
     public class MvcApplication : System.Web.HttpApplication
     {
+        private ILogger logger = LogManager.GetCurrentClassLogger();
+
         protected void Application_Start()
         {
             AreaRegistration.RegisterAllAreas();
@@ -18,6 +21,12 @@ namespace WebSite
             RouteConfig.RegisterRoutes(RouteTable.Routes);
             BundleConfig.RegisterBundles(BundleTable.Bundles);
             Bootstrapper.Initialise();
+            
+        }
+
+        protected void Application_Error()
+        {
+            logger.Error(Server.GetLastError());
         }
     }
 }

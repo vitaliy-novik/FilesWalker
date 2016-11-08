@@ -6,6 +6,7 @@ using Business.Interface.Services;
 using Infrastructure.Entities;
 using WebSite.Mapping;
 using WebSite.ViewModels.Folders;
+using System.Threading;
 
 namespace WebSite.Controllers
 {
@@ -143,6 +144,7 @@ namespace WebSite.Controllers
         [Authorize(Roles = "Administrator")]
         public ActionResult CreateFile(string path)
         {
+            Thread.Sleep(5000);
             return View("CreateFileDialog");
         }
 

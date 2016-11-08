@@ -77,6 +77,10 @@ namespace Business.Core.Services
             {
                 dirInfo.Create();
             }
+            else
+            {
+                throw new ArgumentException(string.Format("Folder path '{0}' already exists", path));
+            }
         }
 
         /// <summary>

@@ -3,6 +3,7 @@ using CompositionRoot;
 using Microsoft.AspNet.Identity;
 using Microsoft.Practices.Unity;
 using Microsoft.Practices.Unity.Mvc;
+using NLog;
 using WebSite.Managers;
 using WebSite.Models;
 
