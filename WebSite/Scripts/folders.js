@@ -7,9 +7,6 @@
     $(document).ready(initialize());
 
     function initialize() {
-        checkBoxes = $("input[type='checkbox'][role='select']:not([id='selectAll']):not([readonly]):not([disabled])");
-        mainCheckBox = $("#selectAll");
-
         bindCreateButtons();
         initializeCheckboxes();
         bindRenameButton();
@@ -18,13 +15,10 @@
     }
 
     function initializeAsync() {
-        checkBoxes = $("input[type='checkbox'][role='select']:not([id='selectAll']):not([readonly]):not([disabled])");
-        mainCheckBox = $("#selectAll");
-
         checks = [];
         initializeCheckboxes();
         initializeDragAndDrop();
-        showActionsPanel(checks.length);
+        showActionsPanel();
     }
 
     function bindCreateButtons() {
@@ -46,7 +40,9 @@
     }
 
     function initializeCheckboxes() {
-        
+        checkBoxes = $("input[type='checkbox'][role='select']:not([id='selectAll']):not([readonly]):not([disabled])");
+        mainCheckBox = $("#selectAll");
+
         checkBoxes.bind("click", function (e) {
             if (e.target.checked) {
                 checks.push(getNameForCheckBox(e.target));
@@ -58,7 +54,7 @@
                 }
             }
 
-            showActionsPanel(checks.length);
+            showActionsPanel();
         });
 
         mainCheckBox.bind("click", function (e) {
@@ -74,16 +70,15 @@
                 checks = [];
             }
 
-            showActionsPanel(checks.length);
+            showActionsPanel();
         });
     }
 
-    function showActionsPanel(length) {
-        if (length > 0) {
+    function showActionsPanel() {
+        if (checks.length > 0) {
             $("#actionsPanel").removeClass("hidden");
-            if (length == 1) {
+            if (checks.length == 1) {
                 $("#renameFolderButton").removeClass("hidden");
-                prepareRenameDialog();
             } else {
                 $("#renameFolderButton").addClass("hidden");
             }
@@ -104,7 +99,7 @@
             var dialogSelector = button.data("target");
             var dialog = $(dialogSelector);
             if (dialog.length > 0) {
-                //$(".modal").modal("show");
+                prepareRenameDialog();
                 return;
             }
             var url = $(this).attr("href") + "?folder=" + checks[0];
@@ -112,7 +107,7 @@
                 $("body").append(response);
                 var dialog = $(dialogSelector);
                 bindSendDialogAsync(dialog);
-                $(".modal").modal("show");
+                dialog.modal("show");
             });
         });
     }
