@@ -21,7 +21,7 @@ namespace WebSite.Controllers
         /// <summary>
         /// Returns view with root computer directory
         /// </summary>
-        [Authorize]
+        [Authorize(Roles = "Administrator,User")]
         public ActionResult Index()
         {
             Folder folder = FoldersService.GetDirectories();
@@ -33,7 +33,7 @@ namespace WebSite.Controllers
         /// Return view with directory specified by path
         /// </summary>
         /// <param name="path">Path to the directory</param>
-        [Authorize]
+        [Authorize(Roles = "Administrator,User")]
         public ActionResult Folder(string path)
         {
             return GetFolderView(path);
