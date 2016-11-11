@@ -10,6 +10,7 @@ namespace Infrastructure.Entities
     {
         public Folder()
         {
+            Path = string.Empty;
             FoldersList = new List<DirectoryInfo>();
             FilesList = new List<FileInfo>();
         }

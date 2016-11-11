@@ -4,6 +4,7 @@ using System.Web;
 using System.Web.Mvc;
 using Microsoft.AspNet.Identity;
 using Microsoft.Owin.Security;
+using Microsoft.Practices.Unity;
 using WebSite.Managers;
 using WebSite.Mapping;
 using WebSite.Models;
@@ -11,34 +12,43 @@ using WebSite.ViewModels.Account;
 
 namespace WebSite.Controllers
 {
+    /// <summary>
+    /// Controller for accounts operations
+    /// </summary>
     public class AccountController : Controller
     {
-        private readonly IUserManager<IdentityUser> userManager;
+        [Dependency]
+        public IUserManager<IdentityUser> UserManager { get; set; }
 
-        public AccountController(IUserManager<IdentityUser> userManager)
-        {
-            this.userManager = userManager;
-        }
-
+        /// <summary>
+        /// Returns form to log in
+        /// </summary>
+        /// <returns>View with login form</returns>
         public ActionResult Login()
         {
             return View();
         }
 
+        /// <summary>
+        /// Logins user
+        /// </summary>
+        /// <param name="model">Model with user name and password</param>
+        /// <param name="returnUrl">Url to redirect user</param>
+        /// <returns>Redirect to required page</returns>
         [HttpPost]
         [AllowAnonymous]
         public async Task<ActionResult> Login(LoginViewModel model, string returnUrl)
         {
             if (ModelState.IsValid)
             {
-                IdentityUser user = await userManager.FindAsync(model.UserName, model.Password);
+                IdentityUser user = await UserManager.FindAsync(model.UserName, model.Password);
 
                 if (user != null)
                 {
                     IAuthenticationManager authenticationManager = HttpContext.GetOwinContext().Authentication;
                     authenticationManager.SignOut(DefaultAuthenticationTypes.ExternalCookie);
 
-                    ClaimsIdentity identity = await userManager.CreateIdentityAsync(user, DefaultAuthenticationTypes.ApplicationCookie);
+                    ClaimsIdentity identity = await UserManager.CreateIdentityAsync(user, DefaultAuthenticationTypes.ApplicationCookie);
                     AuthenticationProperties props = new AuthenticationProperties
                     {
                         IsPersistent = true
@@ -63,6 +73,10 @@ namespace WebSite.Controllers
             return View(model);
         }
 
+        /// <summary>
+        /// User log off
+        /// </summary>
+        /// <returns>redirect to login</returns>
         public ActionResult LogOff()
         {
             IAuthenticationManager authenticationManager = HttpContext.GetOwinContext().Authentication;
@@ -70,12 +84,21 @@ namespace WebSite.Controllers
             return RedirectToAction("Login", "Account");
         }
 
+        /// <summary>
+        /// Returns form to register new user
+        /// </summary>
+        /// <returns>View with registration form</returns>
         [AllowAnonymous]
         public ActionResult Register()
         {
             return View();
         }
 
+        /// <summary>
+        /// Registers new user
+        /// </summary>
+        /// <param name="model">Registration user model</param>
+        /// <returns>Redirect to login form</returns>
         [HttpPost]
         [AllowAnonymous]
         public async Task<ActionResult> Register(RegistrationViewModel model)
@@ -84,7 +107,7 @@ namespace WebSite.Controllers
             {
                 IdentityUser user = UserMapper.Map(model);
 
-                IdentityResult result = await this.userManager.CreateAsync(user, model.Password);
+                IdentityResult result = await this.UserManager.CreateAsync(user, model.Password);
                 if (result.Succeeded)
                 {
                     return RedirectToAction("Login", "Account");

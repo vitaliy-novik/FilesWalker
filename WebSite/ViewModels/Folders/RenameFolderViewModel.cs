@@ -11,6 +11,7 @@ namespace WebSite.ViewModels.Folders
 
         [Required]
         [FileName("A file name can't contain any of the following characters: \" \\ / : < > ? | *")]
+        [Display(Name = "New name")]
         public string NewName { get; set; }
     }
 }

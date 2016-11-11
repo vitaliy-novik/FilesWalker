@@ -17,6 +17,16 @@
         initializeDragAndDrop();
     }
 
+    function initializeAsync() {
+        checkBoxes = $("input[type='checkbox'][role='select']:not([id='selectAll']):not([readonly]):not([disabled])");
+        mainCheckBox = $("#selectAll");
+
+        checks = [];
+        initializeCheckboxes();
+        initializeDragAndDrop();
+        showActionsPanel(checks.length);
+    }
+
     function bindCreateButtons() {
         $("#createFolderButton, #createFileButton").bind("click", function (e) {
             var button = $(e.target);
@@ -48,7 +58,7 @@
                 }
             }
 
-            showActionsPanel(checks.length, false);
+            showActionsPanel(checks.length);
         });
 
         mainCheckBox.bind("click", function (e) {
@@ -64,21 +74,28 @@
                 checks = [];
             }
 
-            showActionsPanel(checks.length, true);
+            showActionsPanel(checks.length);
         });
     }
 
-    function showActionsPanel(length, main) {
+    function showActionsPanel(length) {
         if (length > 0) {
             $("#actionsPanel").removeClass("hidden");
             if (length == 1) {
                 $("#renameFolderButton").removeClass("hidden");
+                prepareRenameDialog();
             } else {
                 $("#renameFolderButton").addClass("hidden");
             }
         } else {
             $("#actionsPanel").addClass("hidden");
         }
+    }
+
+    function prepareRenameDialog() {
+        $("input[name='OldName']").val(checks[0]);
+        $("input[name='NewName']").val(checks[0]);
+        $("#oldName").text(checks[0]);
     }
 
     function bindRenameButton() {
@@ -150,13 +167,16 @@
         return name;
     }
 
-    function proceedResponse(response, status, xhr, container) {
-        var contentType = xhr.getResponseHeader("Content-Type");
-        if ("url; charset=utf-8" === contentType) {
-            window.location = "/Folders/" + response;
-        } else {
+    function proceedResponse(response, status, xhr, container, shouldCloseDialog) {
+        if ($(response).filter("#validationContent").length > 0) {
             var $container = $(container);
             $("#validationResult", $container).html(response);
+        } else {
+            $("#foldersResults").html(response);
+            initializeAsync();
+            if (shouldCloseDialog) {
+                $(".modal").modal("hide");
+            }
         }
     }
 
@@ -170,7 +190,7 @@
                 data: form.serializeArray(),
                 statusCode: {
                     200: function (response, status, xhr) {
-                        proceedResponse(response, status, xhr, dialog);
+                        proceedResponse(response, status, xhr, dialog, true);
                     },
                     414: function (response, status, xhr) {
                         $("#validationResult", dialog).html('<div class="alert alert-danger alert-dismissible" role="alert"><button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>' +

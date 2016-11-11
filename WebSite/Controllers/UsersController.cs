@@ -4,6 +4,7 @@ using System.Linq;
 using System.Web.Mvc;
 using Business.Interface.Services;
 using Infrastructure.Entities;
+using Microsoft.Practices.Unity;
 using WebSite.Mapping;
 using WebSite.ViewModels.Users;
 
@@ -12,34 +13,29 @@ namespace WebSite.Controllers
     [Authorize(Roles = "Administrator")]
     public class UsersController : Controller
     {
-        private readonly IUserService userService;
-        private readonly IRoleService roleService;
+        [Dependency]
+        public IUserService UserService { get; set; }
 
-        public UsersController(IUserService userService, IRoleService roleService)
-        {
-            if (roleService == null)
-            {
-                throw new ArgumentNullException("roleService");
-            }
+        [Dependency]
+        public IRoleService RoleService { get; set; }
 
-            if (userService == null)
-            {
-                throw new ArgumentNullException("userService");
-            }
-
-            this.userService = userService;
-            this.roleService = roleService;
-        }
-
+        /// <summary>
+        /// Returns list with all users
+        /// </summary>
         public ActionResult Index()
         {
-            IEnumerable<IUser> users = userService.GetAllUsers();
+            IEnumerable<IUser> users = UserService.GetAllUsers();
             List<UserViewModel> viewModel =
-                new List<UserViewModel>(users.Select(user => UserMapper.Map(user, roleService)));
+                new List<UserViewModel>(users.Select(user => UserMapper.Map(user, RoleService)));
 
             return View(new UsersListViewModel(viewModel));
         }
 
+        /// <summary>
+        /// Returns form to edit user roles
+        /// </summary>
+        /// <param name="id">User identifier</param>
+        /// <returns>View with form</returns>
         public ActionResult Edit(string id)
         {
             if (string.IsNullOrEmpty(id))
@@ -47,12 +43,17 @@ namespace WebSite.Controllers
                 return RedirectToAction("Index");
             }
 
-            IUser user = userService.GetById(id);
-            EditUserViewModel viewModel = UserMapper.MapToEditUserViewModel(user, roleService);
+            IUser user = UserService.GetById(id);
+            EditUserViewModel viewModel = UserMapper.MapToEditUserViewModel(user, RoleService);
 
             return View(viewModel);
         }
 
+        /// <summary>
+        /// Edits user roles
+        /// </summary>
+        /// <param name="viewModel">Model with new user information</param>
+        /// <returns>Users list if operation success and form if failed</returns>
         [HttpPost]
         public ActionResult Edit(EditUserViewModel viewModel)
         {
@@ -60,13 +61,18 @@ namespace WebSite.Controllers
             {
                 var user = UserMapper.Map(viewModel);
                 //userService.Update(user);
-                roleService.SetUserRoles(RoleMapper.GetRoles(viewModel.UserInRoles), user.Id);
+                RoleService.SetUserRoles(RoleMapper.GetRoles(viewModel.UserInRoles), user.Id);
                 return RedirectToAction("Index");
             }
 
             return View();
         }
 
+        /// <summary>
+        /// Deletes user
+        /// </summary>
+        /// <param name="id">User identifier</param>
+        /// <returns>Updated users list</returns>
         public ActionResult Delete(string id)
         {
             if (string.IsNullOrEmpty(id))
@@ -74,8 +80,8 @@ namespace WebSite.Controllers
                 return RedirectToAction("Index");
             }
 
-            IUser user = userService.GetById(id);
-            userService.Delete(user);
+            IUser user = UserService.GetById(id);
+            UserService.Delete(user);
 
             return RedirectToAction("Index");
         }

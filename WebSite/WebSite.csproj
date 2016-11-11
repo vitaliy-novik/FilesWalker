@@ -264,6 +264,8 @@
     <Content Include="Views\Folders\RenameFolderDialog.cshtml" />
     <Content Include="Views\Folders\CreateFileDialog.cshtml" />
     <Content Include="Views\Shared\ErrorsList.cshtml" />
+    <Content Include="Views\Folders\AdministratorTools.cshtml" />
+    <Content Include="Views\Folders\Folders.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

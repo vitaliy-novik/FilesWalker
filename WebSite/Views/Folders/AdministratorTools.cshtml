@@ -1,0 +1,22 @@
+﻿@model System.String
+
+<div class="row">
+    <div class="row col-md-1"></div>
+    <div class="row col-md-2">
+        <div class="dropdown">
+            <button class="btn btn-default dropdown-toggle" type="button" id="dropdownMenu1" data-toggle="dropdown" aria-haspopup="true" aria-expanded="true">
+                <span class="glyphicon glyphicon-plus"></span>
+                New
+                <span class="caret"></span>
+            </button>
+            <ul class="dropdown-menu" aria-labelledby="dropdownMenu1">
+                <li>@Html.ActionLink("Create folder", "Create", "Folders", new { path = Model }, new { id = "createFolderButton", @data_toggle = "modal", @data_target = "#createFolderModal" })</li>
+                <li>@Html.ActionLink("Create file", "CreateFile", "Folders", new { path = Model }, new { id = "createFileButton", @data_toggle = "modal", @data_target = "#createFileModal" })</li>
+            </ul>
+        </div>
+    </div>
+    <div class="btn-group hidden col-md-2" role="group" aria-label="Actions" id="actionsPanel">
+        @Html.ActionLink("Delete", "Delete", "Folders", new { path = Model }, new { type = "button", @class = "btn btn-default", id = "delete" })
+        @Html.ActionLink("Rename", "Rename", "Folders", new { path = Model }, new { type = "button", @class = "btn btn-default", id = "renameFolderButton", @data_toggle = "modal", @data_target = "#renameFolderModal" })
+    </div>
+</div>
